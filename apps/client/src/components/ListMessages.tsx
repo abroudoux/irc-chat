@@ -1,4 +1,12 @@
 export default function ListMessages({ messages }: { messages: string[] }) {
+  if (!messages.length) {
+    return (
+      <div className="p-2">
+        <h2>Start a new chat by sending a message</h2>
+      </div>
+    );
+  }
+
   return (
     <section className="w-screen">
       <ul className="my-1">

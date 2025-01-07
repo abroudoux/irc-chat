@@ -8,6 +8,8 @@ export default function InputSendMessage({ socketUrl }: { socketUrl: string }) {
   const [message, setMessage] = useState<String>("");
   const socket = io(socketUrl);
 
+  if (!socket) return;
+
   function sendMessage() {
     if (message.length === 0) return;
     socket.emit("send_message", { message: message });
