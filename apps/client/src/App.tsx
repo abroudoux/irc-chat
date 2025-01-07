@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
 import InputSendMessage from "@/components/InputSendMessage";
+import ListMessages from "@/components/ListMessages";
 
 export default function App() {
-  const [messageReceived, setMessageReceived] = useState<String>("");
-  const [allMessages, setAllMessages] = useState<String[]>([]);
+  const [messageReceived, setMessageReceived] = useState<string>("");
+  const [allMessages, setAllMessages] = useState<string[]>([]);
   const socketUrl: string = "http://localhost:3000";
   const socket = io(socketUrl);
 
@@ -18,9 +19,7 @@ export default function App() {
 
   return (
     <>
-      {allMessages.map((message, index) => (
-        <h1 key={index}>{message}</h1>
-      ))}
+      <ListMessages messages={allMessages} />
       <InputSendMessage socketUrl={socketUrl} />
       <h1>Message: {messageReceived}</h1>
     </>
