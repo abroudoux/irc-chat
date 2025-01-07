@@ -20,7 +20,8 @@ export default function App() {
   }, [socket]);
 
   return (
-    <div className="App">
+    <>
+      <h1 className="text-3xl font-bold underline">Hello world!</h1>
       {allMessages.map((message, index) => (
         <h1 key={index}>{message}</h1>
       ))}
@@ -33,6 +34,6 @@ export default function App() {
       />
       <button onClick={sendMessage}>Send message</button>
       <h1>Message: {messageReceived}</h1>
-    </div>
+    </>
   );
 }
