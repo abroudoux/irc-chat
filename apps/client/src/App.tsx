@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 const socket = io("http://localhost:3000");
 
