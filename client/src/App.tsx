@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
+import { Button } from "@/components/ui/Button";
+
 const socket = io("http://localhost:3000");
 
 export default function App() {
@@ -34,6 +36,7 @@ export default function App() {
       />
       <button onClick={sendMessage}>Send message</button>
       <h1>Message: {messageReceived}</h1>
+      <Button>Click me!</Button>
     </>
   );
 }
