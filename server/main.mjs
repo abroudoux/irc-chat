@@ -25,7 +25,6 @@ io.on("connection", (socket) => {
 
   socket.on("join_hello_room", (username) => {
     connectedUsers.add(username);
-
     socket.join("hello");
 
     io.to("hello").emit(
@@ -59,3 +58,6 @@ app.get(`/users/username/:username`, (req, res) => {
   const userExists = connectedUsers.has(username);
   return res.json({ isUsernameAvailable: userExists });
 });
+
+app.get(`/rooms`, (req, res) => {});
+app.post(`/rooms`, (req, res) => {});

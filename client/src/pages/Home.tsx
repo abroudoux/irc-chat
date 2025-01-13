@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import io, { type Socket } from "socket.io-client";
 
 import InputSendMessage from "@/components/InputSendMessage";
@@ -14,7 +13,6 @@ export default function Home() {
   const socketUrl: string = "http://localhost:3000";
   let socket: Socket<any>;
   const { username } = useStore();
-  const roomName = useParams().roomName;
 
   useAuth();
 
@@ -34,7 +32,6 @@ export default function Home() {
   return (
     <SectionLayout className="w-screen h-screen flex flex-row justify-start items-start p-0">
       <div className="mx-10">
-        <h1 className="text-2xl font-bold">{roomName}</h1>
         <Chat data={data} username={username} />
         <InputSendMessage socketUrl={socketUrl} username={username} />
       </div>
