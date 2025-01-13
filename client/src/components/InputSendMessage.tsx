@@ -21,11 +21,12 @@ export default function InputSendMessage(props: InputSendMessageProps) {
   return (
     <SectionLayout>
       <form
-        className="flex w-full max-w-sm items-center space-x-2 fixed bottom-5 justify-center"
+        className="flex w-full items-center space-x-2 fixed bottom-5 justify-start"
         onSubmit={sendMessage}
       >
         <Input
           type="text"
+          className="max-w-screen-sm"
           placeholder="Your message"
           value={message}
           onChange={(e) => {
@@ -33,6 +34,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
           }}
         />
         <Button type="submit">Send</Button>
+        <span>You're currently connected as {props.username}</span>
       </form>
     </SectionLayout>
   );
