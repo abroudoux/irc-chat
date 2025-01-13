@@ -9,22 +9,30 @@ import useAuth from "@/hooks/useAuth";
 export default function Home() {
   const [allMessages, setAllMessages] = useState<string[]>([]);
   const socketUrl: string = "http://localhost:3000";
-  const socket = io(socketUrl);
+  let socket: any;
   const { username } = useStore();
 
   // useAuth();
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
+    socket = io(socketUrl);
+
+    const handleReceiveMessage = (data: any) => {
       setAllMessages((prevMessages) => [...prevMessages, data.message]);
-    });
-  }, [socket]);
+    };
+
+    socket.on("receive_message", handleReceiveMessage);
+
+    return () => {
+      socket.off("receive_message", handleReceiveMessage);
+      socket.disconnect();
+    };
+  }, [socketUrl]);
 
   return (
     <div className="mx-10">
       <ListMessages messages={allMessages} />
-      <InputSendMessage socketUrl={socketUrl} />
-      <p>{username}</p>
+      <InputSendMessage socketUrl={socketUrl} username={username} />
     </div>
   );
 }
