@@ -18,31 +18,26 @@ const io = new Server(server, {
   debug: true,
 });
 
-const rooms = new Set();
-
-app.get("/hello", (req, res) => {
-  res.send("Hello, World!");
-});
-
-app.post("/rooms", (req, res) => {
-  console.log("Request body:", req.body);
-  const { name } = req.body;
-
-  if (!name) return res.status(400).json({ error: "Room name is required." });
-  if (rooms.has(name))
-    return res.status(409).json({ error: "Room already exists." });
-
-  rooms.add(name);
-  res.status(201).json({ message: "Room created successfully." });
-});
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
-});
-
 io.on("connection", (socket) => {
   console.log(`a user connected ${socket.id}`);
+
+  const defaultRoom = "hello";
+  socket.join(defaultRoom);
+  console.log(`User with ID: ${socket.id} joined room: ${defaultRoom}`);
+
+  socket.emit("joined_room", { roomName: defaultRoom });
+
+  socket.on("join_room", (roomName) => {
+    socket.join(roomName);
+    console.log(`User with ID: ${socket.id} joined room: ${roomName}`);
+  });
+
+  socket.on("get_rooms", () => {
+    const rooms = [...io.sockets.adapter.rooms.keys()].filter(
+      (room) => !io.sockets.adapter.sids.get(socket.id)?.has(room)
+    );
+    socket.emit("rooms_list", rooms);
+  });
 
   socket.on("send_message", (data) => {
     console.log(`Message received from ${data.username}: ${data.message}`);

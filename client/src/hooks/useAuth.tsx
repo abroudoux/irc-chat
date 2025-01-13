@@ -8,8 +8,6 @@ export default function useAuth() {
   const { username } = useStore();
 
   useEffect(() => {
-    if (username.length === 0) {
-      navigate("/auth");
-    }
+    if (username.trim() === "") navigate("/auth");
   }, [username, navigate]);
 }

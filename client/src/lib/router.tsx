@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     errorElement: <PageNotFound />,
   },
   {
-    path: `/:channelName`,
+    path: `/:roomName`,
     element: <Home />,
     errorElement: <PageNotFound />,
   },

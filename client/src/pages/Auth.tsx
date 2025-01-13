@@ -8,12 +8,12 @@ import useStore from "@/lib/store";
 export default function Auth() {
   const navigate = useNavigate();
   const { setUsername } = useStore();
-  const [pseudo, setPseudo] = useState<string>("");
+  const [usernameState, setUsernameState] = useState<string>("");
 
-  function authentification() {
-    if (pseudo.length === 0) return;
-    setUsername(pseudo);
-    console.log("Username set to:", pseudo);
+  function authentification(e: React.FormEvent) {
+    e.preventDefault();
+    if (usernameState.trim() === "") return;
+    setUsername(usernameState);
     navigate("/");
   }
 
@@ -22,19 +22,18 @@ export default function Auth() {
       <h1 className="text-4xl font-semibold">
         Choose a pseudo to start chatting
       </h1>
-      <form className="flex flex-row gap-2 items-center">
+      <form
+        onSubmit={authentification}
+        className="flex flex-row gap-2 items-center"
+      >
         <Input
           type="text"
           placeholder="Your pseudo"
           className="max-w-lg"
-          onChange={(e) => {
-            e.preventDefault();
-            setPseudo(e.target.value);
-          }}
+          value={usernameState}
+          onChange={(e) => setUsernameState(e.target.value)}
         />
-        <Button type="submit" onClick={authentification}>
-          Start chatting
-        </Button>
+        <Button type="submit">Start chatting</Button>
       </form>
     </section>
   );

@@ -24,3 +24,7 @@ export interface SectionLayoutProps {
   className?: string;
   children: React.ReactNode;
 }
+
+export interface ListRoomsProps {
+  rooms: string[];
+}
