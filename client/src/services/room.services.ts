@@ -16,17 +16,17 @@ export class RoomService {
 
   public async createRoom(roomName: string): Promise<boolean | undefined> {
     try {
+      console.log("Creating room", roomName);
+
       const response = await fetch(`${this.baseUrl}/rooms`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ roomName }),
+        body: JSON.stringify({ name: roomName }),
       });
 
-      if (!response.ok) {
-        return false;
-      }
+      if (!response.ok) return false;
 
       return true;
     } catch (error: unknown) {

@@ -20,10 +20,7 @@ export default function BtnCreateRoom() {
   const [roomName, setRoomName] = useState<string>("");
 
   async function handleCreateRoom() {
-    if (!roomName) {
-      return;
-    }
-
+    if (roomName.length === 0) return;
     const response = await roomService.createRoom(roomName);
     console.log(response);
   }
@@ -48,7 +45,7 @@ export default function BtnCreateRoom() {
             </Label>
             <Input
               id="name"
-              defaultValue="marketing"
+              value={roomName}
               className="col-span-3"
               onChange={(e) => {
                 setRoomName(e.target.value);

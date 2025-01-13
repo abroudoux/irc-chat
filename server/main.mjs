@@ -6,13 +6,14 @@ import { Server } from "socket.io";
 const PORT = 3000;
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["http://localhost:5173"],
     methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   },
   debug: true,
 });
@@ -24,6 +25,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.post("/rooms", (req, res) => {
+  console.log("Request body:", req.body);
   const { name } = req.body;
 
   if (!name) return res.status(400).json({ error: "Room name is required." });
@@ -32,6 +34,11 @@ app.post("/rooms", (req, res) => {
 
   rooms.add(name);
   res.status(201).json({ message: "Room created successfully." });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Internal Server Error" });
 });
 
 io.on("connection", (socket) => {
