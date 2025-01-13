@@ -19,3 +19,8 @@ export interface InputSendMessageProps {
   socketUrl: string;
   username: string;
 }
+
+export interface SectionLayoutProps {
+  className?: string;
+  children: React.ReactNode;
+}

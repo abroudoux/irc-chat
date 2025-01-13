@@ -1,16 +1,17 @@
+import SectionLayout from "@/components/layouts/SectionLayout";
 import type { ChatProps } from "@/utils/interfaces";
 
 export default function Chat(props: ChatProps) {
   if (!props.data.length) {
     return (
-      <div className="p-2">
+      <SectionLayout>
         <h2>Start a new chat by sending a message</h2>
-      </div>
+      </SectionLayout>
     );
   }
 
   return (
-    <section className="w-screen">
+    <SectionLayout className="w-screen">
       <ul className="my-1">
         {props.data.map((data, index) => (
           <li
@@ -24,6 +25,6 @@ export default function Chat(props: ChatProps) {
           </li>
         ))}
       </ul>
-    </section>
+    </SectionLayout>
   );
 }
