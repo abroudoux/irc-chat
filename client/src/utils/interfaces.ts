@@ -5,7 +5,7 @@ export interface Store {
   setUsername: (value: string) => void;
 }
 
-interface Data {
+export interface Data {
   message: string;
   username: string;
 }
