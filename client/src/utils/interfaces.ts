@@ -1,8 +1,8 @@
 export interface Store {
-  isConnected: boolean;
   username: string;
-  setIsConnected: (value: boolean) => void;
+  channelSelected: string;
   setUsername: (value: string) => void;
+  setChannelSelected: (value: string) => void;
 }
 
 export interface Data {

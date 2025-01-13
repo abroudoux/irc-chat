@@ -8,7 +8,7 @@ export default function useAuth() {
   const { username } = useStore();
 
   useEffect(() => {
-    if (username === "") {
+    if (username.length === 0) {
       navigate("/auth");
     }
   }, [username, navigate]);

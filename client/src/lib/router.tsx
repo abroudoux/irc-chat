@@ -11,6 +11,11 @@ const router = createBrowserRouter([
     errorElement: <PageNotFound />,
   },
   {
+    path: `/:channelName`,
+    element: <Home />,
+    errorElement: <PageNotFound />,
+  },
+  {
     path: "/auth",
     element: <Auth />,
     errorElement: <PageNotFound />,
