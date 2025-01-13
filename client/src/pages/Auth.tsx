@@ -28,6 +28,7 @@ export default function Auth() {
           placeholder="Your pseudo"
           className="max-w-lg"
           onChange={(e) => {
+            e.preventDefault();
             setPseudo(e.target.value);
           }}
         />

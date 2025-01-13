@@ -12,7 +12,7 @@ export default function Home() {
   const socket = io(socketUrl);
   const { username } = useStore();
 
-  useAuth();
+  // useAuth();
 
   useEffect(() => {
     socket.on("receive_message", (data) => {

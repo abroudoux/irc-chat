@@ -11,5 +11,5 @@ export default function useAuth() {
     if (username === "") {
       navigate("/auth");
     }
-  }, [username]);
+  }, [username, navigate]);
 }
