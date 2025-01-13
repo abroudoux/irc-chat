@@ -18,33 +18,44 @@ const io = new Server(server, {
   debug: true,
 });
 
+const connectedUsers = new Set();
+
 io.on("connection", (socket) => {
-  console.log(`a user connected ${socket.id}`);
+  console.log(`User connected: ${socket.id}`);
 
-  const defaultRoom = "hello";
-  socket.join(defaultRoom);
-  console.log(`User with ID: ${socket.id} joined room: ${defaultRoom}`);
+  socket.on("join_hello_room", (username) => {
+    connectedUsers.add(username);
 
-  socket.emit("joined_room", { roomName: defaultRoom });
+    socket.join("hello");
 
-  socket.on("join_room", (roomName) => {
-    socket.join(roomName);
-    console.log(`User with ID: ${socket.id} joined room: ${roomName}`);
+    io.to("hello").emit(
+      "update_user_list",
+      Array.from(connectedUsers.values())
+    );
   });
 
-  socket.on("get_rooms", () => {
-    const rooms = [...io.sockets.adapter.rooms.keys()].filter(
-      (room) => !io.sockets.adapter.sids.get(socket.id)?.has(room)
+  socket.on("disconnect", () => {
+    connectedUsers.delete(socket.id);
+
+    io.to("hello").emit(
+      "update_user_list",
+      Array.from(connectedUsers.values())
     );
-    socket.emit("rooms_list", rooms);
+
+    console.log(`User disconnected: ${socket.id}`);
   });
 
   socket.on("send_message", (data) => {
-    console.log(`Message received from ${data.username}: ${data.message}`);
     socket.broadcast.emit("receive_message", data);
   });
 });
 
 server.listen(PORT, () => {
   console.log(`Server is listening on *:${PORT}`);
+});
+
+app.get(`/users/username/:username`, (req, res) => {
+  const { username } = req.params;
+  const userExists = connectedUsers.has(username);
+  return res.json({ isUsernameAvailable: userExists });
 });

@@ -28,3 +28,8 @@ export interface SectionLayoutProps {
 export interface ListRoomsProps {
   rooms: string[];
 }
+
+export interface useIsUsernameAlreadyUsedProps {
+  username: string;
+  socketUrl: string;
+}

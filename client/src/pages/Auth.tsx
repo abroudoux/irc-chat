@@ -3,18 +3,37 @@ import { useNavigate } from "react-router-dom";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import UserService from "@/services/user.services";
 import useStore from "@/lib/store";
+
+const userService = new UserService();
 
 export default function Auth() {
   const navigate = useNavigate();
   const { setUsername } = useStore();
   const [usernameState, setUsernameState] = useState<string>("");
+  const [isUsernameAlreadyUsed, setIsUsernameAlreadyUsed] =
+    useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  function authentification(e: React.FormEvent) {
+  async function authentification(e: React.FormEvent) {
     e.preventDefault();
     if (usernameState.trim() === "") return;
+
+    setIsLoading(true);
+
+    const response = await userService.isUsernameAlreadyUsed(usernameState);
+    if (!response) {
+      console.error("Username already used");
+      setIsUsernameAlreadyUsed(true);
+      setIsLoading(false);
+      return;
+    }
+
     setUsername(usernameState);
     navigate("/");
+
+    setIsLoading(false);
   }
 
   return (
@@ -33,8 +52,13 @@ export default function Auth() {
           value={usernameState}
           onChange={(e) => setUsernameState(e.target.value)}
         />
-        <Button type="submit">Start chatting</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Loading..." : "Start chatting"}
+        </Button>
       </form>
+      {isUsernameAlreadyUsed && (
+        <p className="text-red-500">Username already used</p>
+      )}
     </section>
   );
 }

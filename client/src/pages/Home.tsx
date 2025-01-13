@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import io, { type Socket } from "socket.io-client";
 
 import InputSendMessage from "@/components/InputSendMessage";
@@ -21,20 +21,18 @@ export default function Home() {
   useEffect(() => {
     socket = io(socketUrl);
 
-    const handleReceiveMessage = (data: Data) => {
-      setData((prevData) => [...prevData, data]);
-    };
-    socket.on("receive_message", handleReceiveMessage);
+    socket.emit("join_hello_room", username);
+    socket.on("receive_message", (messageData: Data) => {
+      setData((prevData) => [...prevData, messageData]);
+    });
 
     return () => {
-      socket.off("receive_message", handleReceiveMessage);
       socket.disconnect();
     };
-  }, [socketUrl, roomName]);
+  }, [socketUrl, username]);
 
   return (
     <SectionLayout className="w-screen h-screen flex flex-row justify-start items-start p-0">
-      <div className="h-screen min-h-screen flex flex-col justify-between p-8"></div>
       <div className="mx-10">
         <h1 className="text-2xl font-bold">{roomName}</h1>
         <Chat data={data} username={username} />
