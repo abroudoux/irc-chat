@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
+import io, { type Socket } from "socket.io-client";
 
 import InputSendMessage from "@/components/InputSendMessage";
-import ListMessages from "@/components/ListMessages";
+import Chat from "@/components/Chat";
 import useStore from "@/lib/store";
 import type { Data } from "@/utils/interfaces";
 import useAuth from "@/hooks/useAuth";
@@ -10,7 +10,7 @@ import useAuth from "@/hooks/useAuth";
 export default function Home() {
   const [data, setData] = useState<Data[]>([]);
   const socketUrl: string = "http://localhost:3000";
-  let socket: any;
+  let socket: Socket<any>;
   const { username } = useStore();
 
   // useAuth();
@@ -30,7 +30,7 @@ export default function Home() {
 
   return (
     <div className="mx-10">
-      <ListMessages data={data} />
+      <Chat data={data} username={username} />
       <InputSendMessage socketUrl={socketUrl} username={username} />
     </div>
   );
