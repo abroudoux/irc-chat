@@ -26,5 +26,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`listening on *:${PORT}`);
+  console.log(`Server is listening on *:${PORT}`);
 });

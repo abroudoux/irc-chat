@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "dev": "node main.mjs"
+    "dev": "nodemon main.mjs"
   },
   "dependencies": {
     "express": "^4.21.2",
+    "nodemon": "^3.1.9",
     "socket.io": "^4.8.1"
   }
 }
