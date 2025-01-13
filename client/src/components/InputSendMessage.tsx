@@ -16,7 +16,7 @@ export default function InputSendMessage({ socketUrl }: { socketUrl: string }) {
   }
 
   return (
-    <div className="flex w-full max-w-sm items-center space-x-2 fixed bottom-5 justify-center">
+    <form className="flex w-full max-w-sm items-center space-x-2 fixed bottom-5 justify-center">
       <Input
         type="text"
         placeholder="Your message"
@@ -27,6 +27,6 @@ export default function InputSendMessage({ socketUrl }: { socketUrl: string }) {
       <Button type="submit" onClick={sendMessage}>
         Send
       </Button>
-    </div>
+    </form>
   );
 }
