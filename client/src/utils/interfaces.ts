@@ -5,7 +5,17 @@ export interface Store {
   setUsername: (value: string) => void;
 }
 
-export interface Data {
+interface Data {
   message: string;
+  username: string;
+}
+
+export interface ChatProps {
+  username: string;
+  data: Data[];
+}
+
+export interface InputSendMessageProps {
+  socketUrl: string;
   username: string;
 }

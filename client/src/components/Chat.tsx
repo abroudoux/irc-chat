@@ -1,9 +1,4 @@
-import { Data } from "@/utils/interfaces";
-
-interface ChatProps {
-  username: string;
-  data: Data[];
-}
+import type { ChatProps } from "@/utils/interfaces";
 
 export default function Chat(props: ChatProps) {
   if (!props.data.length) {
