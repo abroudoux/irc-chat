@@ -4,7 +4,7 @@ import io from "socket.io-client";
 import InputSendMessage from "@/components/InputSendMessage";
 import ListMessages from "@/components/ListMessages";
 
-export default function App() {
+export default function Home() {
   const [allMessages, setAllMessages] = useState<string[]>([]);
   const socketUrl: string = "http://localhost:3000";
   const socket = io(socketUrl);
