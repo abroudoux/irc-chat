@@ -13,6 +13,7 @@ export interface Message {
 export interface ChatProps {
   username: string;
   messages: Message[];
+  roomName: string;
 }
 
 export interface InputSendMessageProps {

@@ -16,7 +16,13 @@ export default class SocketService {
   }
 
   public joinHelloRoom(username: string): void {
+    console.log("Joining hello room");
     this.socket.emit("join_hello_room", username);
+  }
+
+  public joinRoom(username: string, roomName: string): void {
+    console.log(`Joining ${roomName} room`);
+    this.socket.emit("join_room", { username, roomName });
   }
 
   public onReceiveMessage(callback: (message: Message) => void): void {
