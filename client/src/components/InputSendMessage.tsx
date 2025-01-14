@@ -1,5 +1,4 @@
 import { useState } from "react";
-import io from "socket.io-client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,13 +7,12 @@ import type { InputSendMessageProps } from "@/utils/interfaces";
 
 export default function InputSendMessage(props: InputSendMessageProps) {
   const [message, setMessage] = useState<string>("");
-  const socket = io(props.socketUrl);
 
   function sendMessage(e: React.FormEvent) {
     e.preventDefault();
     if (message.length === 0) return;
     const username: string = props.username;
-    socket.emit("send_message", { username, message });
+    props.socket.sendMessage(username, message);
     setMessage("");
   }
 

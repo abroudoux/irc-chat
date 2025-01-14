@@ -1,1 +1,29 @@
-export default class UserService {}
+export default class UserService {
+  users = new Set();
+
+  constructor() {}
+
+  addUser(username) {
+    if (this.isUserAlreadyCreated(username)) {
+      return;
+    }
+
+    this.users.add(username);
+  }
+
+  isUserAlreadyCreated(username) {
+    return this.users.has(username);
+  }
+
+  getUsers() {
+    return Array.from(this.users);
+  }
+
+  getUser(username) {
+    return this.users.has(username);
+  }
+
+  logAllusers() {
+    console.log(this.getUsers());
+  }
+}

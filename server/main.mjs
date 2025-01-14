@@ -3,8 +3,12 @@ import http from "http";
 import cors from "cors";
 import { Server } from "socket.io";
 
+import UserService from "./src/services/user.services.mjs";
+import RoomService from "./src/services/room.services.mjs";
+
 const PORT = 3000;
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
@@ -18,34 +22,30 @@ const io = new Server(server, {
   debug: true,
 });
 
-const connectedUsers = new Set();
+const userService = new UserService();
+const roomService = new RoomService();
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
+  roomService.addRoom("hello");
 
   socket.on("join_hello_room", (username) => {
-    connectedUsers.add(username);
     socket.join("hello");
 
-    io.to("hello").emit(
-      "update_user_list",
-      Array.from(connectedUsers.values())
-    );
-  });
+    userService.addUser(username);
 
-  socket.on("disconnect", () => {
-    connectedUsers.delete(socket.id);
+    console.log(`${username} joined the hello room`);
 
-    io.to("hello").emit(
-      "update_user_list",
-      Array.from(connectedUsers.values())
-    );
-
-    console.log(`User disconnected: ${socket.id}`);
+    io.to("hello").emit("user_joined", username);
   });
 
   socket.on("send_message", (data) => {
+    socket.emit("receive_message", data);
     socket.broadcast.emit("receive_message", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`User disconnected: ${socket.id}`);
   });
 });
 
@@ -54,10 +54,8 @@ server.listen(PORT, () => {
 });
 
 app.get(`/users/username/:username`, (req, res) => {
-  const { username } = req.params;
-  const userExists = connectedUsers.has(username);
-  return res.json({ isUsernameAvailable: userExists });
+  // const { username } = req.params;
+  // const userExists = connectedUsers.has(username);
+  // return res.json({ isUsernameAvailable: userExists });
+  return res.json({ isUsernameAvailable: false });
 });
-
-app.get(`/rooms`, (req, res) => {});
-app.post(`/rooms`, (req, res) => {});
