@@ -10,32 +10,30 @@ import SocketService from "@/services/socket.services";
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [logs, setLogs] = useState<string[]>([]);
-  const socketUrl: string = "http://localhost:3000";
   const { username } = useStore();
 
   useAuth();
 
   useEffect(() => {
-    SocketService.instance.onReceiveLogs((log) => {
-      setLogs((prevLogs) => [...prevLogs, log]);
-    });
-
     SocketService.instance.onReceiveMessage((message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    SocketService.instance.joinHelloRoom(username);
+    SocketService.instance.onUserJoined((user) => {
+      const newMessage: Message = {
+        author: user,
+        content: "has joined the room",
+      };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
 
-    // return () => {
-    //   SocketService.instance.disconnect();
-    // };
-  }, [socketUrl, username]);
+    SocketService.instance.joinHelloRoom(username);
+  }, [SocketService.instance.getSocketUrl(), username]);
 
   return (
     <SectionLayout className="w-screen h-screen flex flex-row justify-start items-start p-0">
       <div className="mx-10">
-        <Chat messages={messages} username={username} logs={logs} />
+        <Chat messages={messages} username={username} />
         <InputSendMessage socket={SocketService.instance} username={username} />
       </div>
     </SectionLayout>

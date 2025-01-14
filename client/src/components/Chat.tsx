@@ -1,6 +1,5 @@
 import SectionLayout from "@/components/layouts/SectionLayout";
 import type { ChatProps } from "@/utils/interfaces";
-import { useEffect } from "react";
 
 export default function Chat(props: ChatProps) {
   if (!props.messages.length) {
@@ -10,10 +9,6 @@ export default function Chat(props: ChatProps) {
       </SectionLayout>
     );
   }
-
-  useEffect(() => {
-    console.log("Messages:", props.messages);
-  });
 
   return (
     <SectionLayout className="w-screen">

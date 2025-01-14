@@ -1,5 +1,3 @@
-import { Socket } from "socket.io-client";
-
 export interface Store {
   username: string;
   channelSelected: string;
@@ -15,7 +13,6 @@ export interface Message {
 export interface ChatProps {
   username: string;
   messages: Message[];
-  logs: string[];
 }
 
 export interface InputSendMessageProps {

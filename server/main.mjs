@@ -33,10 +33,9 @@ io.on("connection", (socket) => {
     socket.join("hello");
 
     userService.addUser(username);
-
     console.log(`${username} joined the hello room`);
 
-    io.to("hello").emit("user_joined", username);
+    io.to("hello").emit("joined_hello_room", username);
   });
 
   socket.on("send_message", (data) => {

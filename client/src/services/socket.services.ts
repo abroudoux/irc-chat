@@ -5,13 +5,14 @@ import { Message } from "@/utils/interfaces";
 export default class SocketService {
   public socket: Socket;
   public static instance: SocketService = new SocketService();
+  private socketUrl: string = "http://localhost:3000";
 
   public constructor() {
-    this.socket = io("http://localhost:3000");
+    this.socket = io(this.socketUrl);
   }
 
-  public static getInstance(): SocketService {
-    return this.instance;
+  public getSocketUrl(): string {
+    return this.socketUrl;
   }
 
   public joinHelloRoom(username: string): void {
@@ -36,5 +37,11 @@ export default class SocketService {
 
   public disconnect(): void {
     this.socket.disconnect();
+  }
+
+  public onUserJoined(callback: (users: string) => void): void {
+    this.socket.on("joined_hello_room", (user) => {
+      callback(user);
+    });
   }
 }
