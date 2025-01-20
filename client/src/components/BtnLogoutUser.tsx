@@ -12,5 +12,9 @@ export default function BtnLogoutUser() {
     navigate("/auth");
   }
 
-  return <Button onClick={logoutUser}>Logout</Button>;
+  return (
+    <div className="h-full flex flex-col items-center justify-end">
+      <Button onClick={logoutUser}>Logout</Button>
+    </div>
+  );
 }

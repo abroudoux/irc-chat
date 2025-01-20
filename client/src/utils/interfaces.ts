@@ -35,3 +35,14 @@ export interface useIsUsernameAlreadyUsedProps {
   socket: any;
   username: string;
 }
+
+export enum Commands {
+  NickName,
+  List,
+  Create,
+  Delete,
+  Join,
+  Quit,
+  Users,
+  Msg,
+}

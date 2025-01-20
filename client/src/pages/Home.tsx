@@ -59,9 +59,7 @@ export default function Home() {
 
   return (
     <SectionLayout className="w-screen h-screen flex flex-row justify-start items-start">
-      <div className="h-full flex flex-col items-center justify-end">
-        <BtnLogoutUser />
-      </div>
+      <BtnLogoutUser />
       <div className="h-full">
         <Chat messages={messages} username={username} roomName={roomName} />
         <InputSendMessage

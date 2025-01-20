@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SectionLayout from "@/components/layouts/SectionLayout";
@@ -15,19 +14,44 @@ export default function InputSendMessage(props: InputSendMessageProps) {
     }
   }, []);
 
+  function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
+    setMessage(e.target.value);
+  }
+
   function sendMessage(e: React.FormEvent) {
     e.preventDefault();
     if (message.length === 0) return;
+
     const username: string = props.username;
     const roomName: string = props.roomName;
-    props.socket.sendMessage(roomName, username, message);
+
+    if (message.startsWith("/")) {
+      handleCommand(message.slice(1), username);
+    } else {
+      props.socket.sendMessage(roomName, username, message);
+    }
+
     setMessage("");
+  }
+
+  function handleCommand(command: string, username: string) {
+    switch (command.toLowerCase()) {
+      case "help":
+        console.log("Displaying help information...");
+        break;
+      case "clear":
+        console.log("Clearing messages...");
+        break;
+      default:
+        console.log(`Unknown command: ${command}`);
+        break;
+    }
   }
 
   return (
     <SectionLayout>
       <form
-        className="flex w-full items-center space-x-2 fixed bottom-8 justify-start"
+        className="flex w-full items-center space-x-2 fixed bottom-16 justify-start"
         onSubmit={sendMessage}
       >
         <Input
@@ -36,7 +60,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
           className="max-w-screen-sm"
           placeholder="Your message"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={handleInput}
         />
         <Button type="submit">Send</Button>
         <p className="text-muted-foreground">

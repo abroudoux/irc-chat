@@ -30,9 +30,9 @@ export default function Chat(props: ChatProps) {
   }
 
   return (
-    <SectionLayout className="w-full min-h-12xl h-full flex flex-col gap-2">
+    <SectionLayout className="w-full min-h-8xl h-full flex flex-col gap-2">
       {returnRoomName()}
-      <ul className="my-1 overflow-y-scroll w-full h-full overflow-x-hidden">
+      <ul className="my-1 overflow-y-scroll w-full max-h-10xl h-full overflow-x-hidden">
         {props.messages.map((mess, index) => (
           <li
             key={index}
