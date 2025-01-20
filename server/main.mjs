@@ -16,10 +16,3 @@ const _ = new SocketService(server);
 server.listen(PORT, () => {
   console.log(`Server is listening on *:${PORT}`);
 });
-
-app.get(`/users/username/:username`, (_, res) => {
-  // const { username } = req.params;
-  // const userExists = connectedUsers.has(username);
-  // return res.json({ isUsernameAvailable: userExists });
-  return res.json({ isUsernameAvailable: false });
-});

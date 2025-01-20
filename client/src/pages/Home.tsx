@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import InputSendMessage from "@/components/InputSendMessage";
 import Chat from "@/components/Chat";
@@ -14,11 +14,16 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const { username } = useStore();
   const roomName: string = useParams().roomName || "hello";
+  const navigate = useNavigate();
 
   useAuth();
 
   useEffect(() => {
     const socket = SocketService.instance;
+
+    socket.onUserAlreadyExists(() => {
+      navigate("/auth");
+    });
 
     socket.onReceiveMessage((message) => {
       setMessages((prevMessages) => [...prevMessages, message]);

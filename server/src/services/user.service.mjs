@@ -7,36 +7,26 @@ export default class UserService {
   }
 
   addUserToRoom(username, roomName) {
-    if (this.isUserAlreadyRegistered(username)) {
-      return;
-    }
-
-    if (this.isUserAlreadyInRoom(username, roomName)) {
+    if (!this.canAddUser(username)) {
       return;
     }
 
     this.users.push({ username, roomName });
   }
 
-  isUserAlreadyRegistered(username) {
-    return this.users.some((user) => user.username === username);
-  }
-
-  isUserAlreadyInRoom(username, roomName) {
-    return this.users.some(
-      (user) => user.username === username && user.roomName === roomName
-    );
-  }
-
-  isUserAlreadyCreated(username) {
-    return this.users.has(username);
-  }
-
   getUsers() {
     return this.users;
   }
 
+  canAddUser(username) {
+    return !this.users.some((user) => user.username === username);
+  }
+
   logAllUsers() {
     console.log("Users from UserService:", this.getUsers());
+  }
+
+  removeUser(username) {
+    this.users = this.users.filter((user) => user.username !== username);
   }
 }
