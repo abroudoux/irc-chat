@@ -62,7 +62,7 @@ export default function Home() {
       <div className="h-full flex flex-col items-center justify-end">
         <BtnLogoutUser />
       </div>
-      <div>
+      <div className="h-full">
         <Chat messages={messages} username={username} roomName={roomName} />
         <InputSendMessage
           socket={SocketService.instance}

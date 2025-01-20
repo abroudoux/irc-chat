@@ -39,7 +39,10 @@ export default function InputSendMessage(props: InputSendMessageProps) {
           onChange={(e) => setMessage(e.target.value)}
         />
         <Button type="submit">Send</Button>
-        <span>You're currently connected as {props.username}</span>
+        <p className="text-muted-foreground">
+          You're currently connected as{" "}
+          <span className="text-primary">{props.username}</span>
+        </p>
       </form>
     </SectionLayout>
   );
