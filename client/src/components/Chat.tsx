@@ -10,8 +10,6 @@ export default function Chat(props: ChatProps) {
     );
   }
 
-  console.log(props.messages);
-
   return (
     <SectionLayout className="w-screen">
       <h2 className="text-4xl font-semibold">{props.roomName}</h2>

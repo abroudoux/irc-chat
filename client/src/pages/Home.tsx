@@ -21,9 +21,9 @@ export default function Home() {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    SocketService.instance.onUserJoined((user) => {
+    SocketService.instance.onUserJoined((username) => {
       const newMessage: Message = {
-        author: user,
+        author: username,
         content: "has joined the room",
       };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -34,6 +34,10 @@ export default function Home() {
     } else {
       SocketService.instance.joinRoom(username, "hello");
     }
+
+    return () => {
+      SocketService.instance.socket.off("joined_room");
+    };
   }, [SocketService.instance.getSocketUrl(), username]);
 
   return (

@@ -46,8 +46,8 @@ export default class SocketService {
   joinRoom(socket, data) {
     const { username, roomName } = data;
     socket.join(roomName);
-    console.log(`User ${username} joined the ${roomName} room`);
     this.emitUserJoinedRoom(roomName, username);
+    this.userService.addUser(username);
   }
 
   emitUserJoinedRoom(roomName, username) {

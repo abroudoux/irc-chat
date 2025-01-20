@@ -21,7 +21,6 @@ export default class SocketService {
   }
 
   public joinRoom(username: string, roomName: string): void {
-    console.log(`User ${username} joined ${roomName} room`);
     this.socket.emit("join_room", { username, roomName });
   }
 
@@ -41,8 +40,8 @@ export default class SocketService {
     this.socket.emit("send_message", { author: username, content: message });
   }
 
-  public onUserJoined(callback: (users: string) => void): void {
-    this.socket.on("joined_hello_room", (user) => {
+  public onUserJoined(callback: (user: string) => void): void {
+    this.socket.on("joined_room", (user) => {
       callback(user);
       console.log(`User ${user} joined the room`);
     });
