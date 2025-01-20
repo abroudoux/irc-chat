@@ -25,8 +25,12 @@ export default class SocketService {
     });
   }
 
-  public sendMessage(username: string, message: string): void {
-    this.socket.emit("send_message", { author: username, content: message });
+  public sendMessage(roomName: string, author: string, content: string): void {
+    this.socket.emit("send_message", {
+      roomName: roomName,
+      author: author,
+      content: content,
+    });
   }
 
   public onUserJoined(callback: (user: string) => void): void {

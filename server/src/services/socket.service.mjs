@@ -28,7 +28,7 @@ export default class SocketService {
       });
 
       socket.on("send_message", (data) => {
-        this.handleMessage(socket, data);
+        this.sendMessage(data.author, data.roomName, data.content);
       });
 
       socket.on("disconnect", () => {
@@ -47,9 +47,7 @@ export default class SocketService {
     this.io.to(roomName).emit("joined_room", username);
   }
 
-  handleMessage(socket, data) {
-    console.log("Message received on server:", data);
-    socket.emit("receive_message", data);
-    socket.broadcast.emit("receive_message", data);
+  sendMessage(author, roomName, content) {
+    this.io.to(roomName).emit("receive_message", { author, content });
   }
 }

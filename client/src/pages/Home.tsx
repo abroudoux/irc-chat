@@ -24,7 +24,7 @@ export default function Home() {
     SocketService.instance.onUserJoined((username) => {
       const newMessage: Message = {
         author: username,
-        content: "has joined the room",
+        content: `has joined the room ${roomName}`,
       };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
@@ -45,7 +45,11 @@ export default function Home() {
     <SectionLayout className="w-screen h-screen flex flex-row justify-start items-start p-0">
       <div className="mx-10">
         <Chat messages={messages} username={username} roomName={roomName} />
-        <InputSendMessage socket={SocketService.instance} username={username} />
+        <InputSendMessage
+          socket={SocketService.instance}
+          username={username}
+          roomName={roomName}
+        />
       </div>
     </SectionLayout>
   );

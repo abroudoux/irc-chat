@@ -19,7 +19,8 @@ export default function InputSendMessage(props: InputSendMessageProps) {
     e.preventDefault();
     if (message.length === 0) return;
     const username: string = props.username;
-    props.socket.sendMessage(username, message);
+    const roomName: string = props.roomName;
+    props.socket.sendMessage(roomName, username, message);
     setMessage("");
   }
 

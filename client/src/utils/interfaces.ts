@@ -19,6 +19,7 @@ export interface ChatProps {
 export interface InputSendMessageProps {
   socket: any;
   username: string;
+  roomName: string;
 }
 
 export interface SectionLayoutProps {
