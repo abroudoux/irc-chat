@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,13 @@ import type { InputSendMessageProps } from "@/utils/interfaces";
 
 export default function InputSendMessage(props: InputSendMessageProps) {
   const [message, setMessage] = useState<string>("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   function sendMessage(e: React.FormEvent) {
     e.preventDefault();
@@ -23,6 +30,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
         onSubmit={sendMessage}
       >
         <Input
+          ref={inputRef}
           type="text"
           className="max-w-screen-sm"
           placeholder="Your message"
