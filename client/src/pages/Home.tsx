@@ -18,11 +18,13 @@ export default function Home() {
   useAuth();
 
   useEffect(() => {
-    SocketService.instance.onReceiveMessage((message) => {
+    const socket = SocketService.instance;
+
+    socket.onReceiveMessage((message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    SocketService.instance.onUserJoined((username) => {
+    socket.onUserJoined((username) => {
       const newMessage: Message = {
         author: username,
         content: `has joined the room ${roomName}`,
@@ -31,14 +33,14 @@ export default function Home() {
     });
 
     if (roomName) {
-      SocketService.instance.joinRoom(username, roomName);
+      socket.joinRoom(username, roomName);
     } else {
-      SocketService.instance.joinRoom(username, "hello");
+      socket.joinRoom(username, "hello");
     }
 
     return () => {
-      SocketService.instance.socket.off("joined_room");
-      SocketService.instance.disconnect();
+      socket.offFromRoom("joined_room");
+      socket.offFromRoom("receive_message");
     };
   }, [SocketService.instance.getSocketUrl(), username]);
 

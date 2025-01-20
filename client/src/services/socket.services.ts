@@ -9,10 +9,6 @@ export default class SocketService {
 
   public constructor() {
     this.socket = io(this.socketUrl);
-
-    this.socket.on("user_already_exists", (_) => {
-      console.log("Username already exists.");
-    });
   }
 
   public getSocketUrl(): string {
@@ -49,6 +45,9 @@ export default class SocketService {
 
   public disconnect(): void {
     this.socket.disconnect();
-    this.socket.off("user_already_exists");
+  }
+
+  public offFromRoom(roomName: string): void {
+    this.socket.off(roomName);
   }
 }

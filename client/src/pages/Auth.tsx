@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Input } from "@/components/ui/input";
@@ -9,10 +9,9 @@ export default function Auth() {
   const navigate = useNavigate();
   const { setUsername } = useStore();
   const [usernameState, setUsernameState] = useState<string>("");
-  useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  async function authentification(e: React.FormEvent) {
+  async function auth(e: FormEvent) {
     e.preventDefault();
     if (usernameState.trim() === "") return;
     setIsLoading(true);
@@ -26,10 +25,7 @@ export default function Auth() {
       <h1 className="text-4xl font-semibold">
         Choose a pseudo to start chatting
       </h1>
-      <form
-        onSubmit={authentification}
-        className="flex flex-row gap-2 items-center"
-      >
+      <form onSubmit={auth} className="flex flex-row gap-2 items-center">
         <Input
           type="text"
           placeholder="Your pseudo"
