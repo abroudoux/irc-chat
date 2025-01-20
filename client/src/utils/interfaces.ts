@@ -32,6 +32,6 @@ export interface ListRoomsProps {
 }
 
 export interface useIsUsernameAlreadyUsedProps {
+  socket: any;
   username: string;
-  socketUrl: string;
 }

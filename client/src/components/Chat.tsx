@@ -11,7 +11,7 @@ export default function Chat(props: ChatProps) {
   }
 
   return (
-    <SectionLayout className="w-screen">
+    <SectionLayout className="w-full">
       <h2 className="text-4xl font-semibold">{props.roomName}</h2>
       <ul className="my-1">
         {props.messages.map((mess, index) => (

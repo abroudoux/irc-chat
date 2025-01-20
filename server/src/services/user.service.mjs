@@ -1,17 +1,31 @@
 export default class UserService {
   users;
+  static instance = new UserService();
 
   constructor() {
-    this.users = new Set();
+    this.users = [];
   }
 
-  addUser(username) {
-    if (this.isUserAlreadyCreated(username)) {
+  addUserToRoom(username, roomName) {
+    if (this.isUserAlreadyRegistered(username)) {
       return;
     }
 
-    this.users.add(username);
-    this.logUsers();
+    if (this.isUserAlreadyInRoom(username, roomName)) {
+      return;
+    }
+
+    this.users.push({ username, roomName });
+  }
+
+  isUserAlreadyRegistered(username) {
+    return this.users.some((user) => user.username === username);
+  }
+
+  isUserAlreadyInRoom(username, roomName) {
+    return this.users.some(
+      (user) => user.username === username && user.roomName === roomName
+    );
   }
 
   isUserAlreadyCreated(username) {
@@ -19,10 +33,10 @@ export default class UserService {
   }
 
   getUsers() {
-    return Array.from(this.users);
+    return this.users;
   }
 
-  logUsers() {
-    console.log("Users:", this.getUsers());
+  logAllUsers() {
+    console.log("Users from UserService:", this.getUsers());
   }
 }

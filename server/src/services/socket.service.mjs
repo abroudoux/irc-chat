@@ -1,10 +1,11 @@
 import { Server } from "socket.io";
 
-import UserService from "./user.service.mjs";
+import RoomService from "./room.service.mjs";
 
 export default class SocketService {
   io;
-  userService;
+  connectedUsers;
+  roomService;
 
   constructor(server) {
     this.io = new Server(server, {
@@ -16,15 +17,25 @@ export default class SocketService {
     });
 
     this.initialize();
-    this.userService = new UserService();
+    this.connectedUsers = {};
+    this.roomService = new RoomService();
   }
 
   initialize() {
     this.io.on("connection", (socket) => {
       console.log(`User connected: ${socket.id}`);
 
-      socket.on("join_room", (username, roomName) => {
-        this.joinRoom(socket, username, roomName);
+      socket.on("join_room", (data) => {
+        console.log(this.connectedUsers);
+
+        if (this.checkIfUserAlreadyExists(data.username)) {
+          socket.emit("user_already_exists", { userAlreadyExists: true });
+          return;
+        }
+
+        this.connectedUsers[data.username] = socket.id;
+        this.joinRoom(socket, data.username, data.roomName);
+        console.log(this.connectedUsers);
       });
 
       socket.on("send_message", (data) => {
@@ -33,6 +44,12 @@ export default class SocketService {
 
       socket.on("disconnect", () => {
         console.log(`User disconnected: ${socket.id}`);
+        for (const username in this.connectedUsers) {
+          if (this.connectedUsers[username] === socket.id) {
+            delete this.connectedUsers[username];
+            break;
+          }
+        }
       });
     });
   }
@@ -45,6 +62,10 @@ export default class SocketService {
 
   emitUserJoinedRoom(roomName, username) {
     this.io.to(roomName).emit("joined_room", username);
+  }
+
+  checkIfUserAlreadyExists(username) {
+    return username in this.connectedUsers;
   }
 
   sendMessage(author, roomName, content) {
