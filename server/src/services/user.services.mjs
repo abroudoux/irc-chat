@@ -18,12 +18,4 @@ export default class UserService {
   getUsers() {
     return Array.from(this.users);
   }
-
-  getUser(username) {
-    return this.users.has(username);
-  }
-
-  logAllusers() {
-    console.log(this.getUsers());
-  }
 }

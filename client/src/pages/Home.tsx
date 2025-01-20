@@ -32,7 +32,7 @@ export default function Home() {
     if (roomName) {
       SocketService.instance.joinRoom(username, roomName);
     } else {
-      SocketService.instance.joinHelloRoom(username);
+      SocketService.instance.joinRoom(username, "hello");
     }
   }, [SocketService.instance.getSocketUrl(), username]);
 

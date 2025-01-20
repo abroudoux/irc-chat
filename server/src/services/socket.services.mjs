@@ -1,7 +1,10 @@
 import { Server } from "socket.io";
 
-class SocketService {
+import UserService from "./user.services.mjs";
+
+export default class SocketService {
   io;
+  userService;
 
   constructor(server) {
     this.io = new Server(server, {
@@ -13,6 +16,7 @@ class SocketService {
     });
 
     this.initialize();
+    this.userService = new UserService();
   }
 
   initialize() {
@@ -21,10 +25,12 @@ class SocketService {
 
       socket.on("join_hello_room", (username) => {
         this.joinRoom(socket, "hello", username);
+        const message = `Hello ${username}, welcome to the Hello room!`;
+        this.io.to("hello").emit("joined_hello_room", message);
       });
 
-      socket.on("join_room", (roomName, username) => {
-        this.joinRoom(socket, roomName, username);
+      socket.on("join_room", (username, roomName) => {
+        this.joinRoom(socket, username, roomName);
       });
 
       socket.on("send_message", (data) => {
@@ -37,9 +43,14 @@ class SocketService {
     });
   }
 
-  joinRoom(socket, roomName, username) {
+  joinRoom(socket, data) {
+    const { username, roomName } = data;
     socket.join(roomName);
-    console.log(`${username} joined the ${roomName} room`);
+    console.log(`User ${username} joined the ${roomName} room`);
+    this.emitUserJoinedRoom(roomName, username);
+  }
+
+  emitUserJoinedRoom(roomName, username) {
     this.io.to(roomName).emit("joined_room", username);
   }
 
@@ -49,5 +60,3 @@ class SocketService {
     socket.broadcast.emit("receive_message", data);
   }
 }
-
-export default SocketService;
