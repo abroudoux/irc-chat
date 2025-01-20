@@ -2,7 +2,7 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 
-import SocketService from "./src/services/socket.services.mjs";
+import SocketService from "./src/services/socket.service.mjs";
 
 const PORT = 3000;
 const app = express();

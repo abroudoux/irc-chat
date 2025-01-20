@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 
-import UserService from "./user.services.mjs";
+import UserService from "./user.service.mjs";
 
 export default class SocketService {
   io;
@@ -23,12 +23,6 @@ export default class SocketService {
     this.io.on("connection", (socket) => {
       console.log(`User connected: ${socket.id}`);
 
-      socket.on("join_hello_room", (username) => {
-        this.joinRoom(socket, "hello", username);
-        const message = `Hello ${username}, welcome to the Hello room!`;
-        this.io.to("hello").emit("joined_hello_room", message);
-      });
-
       socket.on("join_room", (username, roomName) => {
         this.joinRoom(socket, username, roomName);
       });
@@ -47,7 +41,6 @@ export default class SocketService {
     const { username, roomName } = data;
     socket.join(roomName);
     this.emitUserJoinedRoom(roomName, username);
-    this.userService.addUser(username);
   }
 
   emitUserJoinedRoom(roomName, username) {

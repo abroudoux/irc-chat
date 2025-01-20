@@ -37,6 +37,7 @@ export default function Home() {
 
     return () => {
       SocketService.instance.socket.off("joined_room");
+      SocketService.instance.disconnect();
     };
   }, [SocketService.instance.getSocketUrl(), username]);
 

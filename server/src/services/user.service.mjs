@@ -1,7 +1,9 @@
 export default class UserService {
-  users = new Set();
+  users;
 
-  constructor() {}
+  constructor() {
+    this.users = new Set();
+  }
 
   addUser(username) {
     if (this.isUserAlreadyCreated(username)) {
@@ -9,6 +11,7 @@ export default class UserService {
     }
 
     this.users.add(username);
+    this.logUsers();
   }
 
   isUserAlreadyCreated(username) {
@@ -17,5 +20,9 @@ export default class UserService {
 
   getUsers() {
     return Array.from(this.users);
+  }
+
+  logUsers() {
+    console.log("Users:", this.getUsers());
   }
 }

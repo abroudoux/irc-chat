@@ -15,11 +15,6 @@ export default class SocketService {
     return this.socketUrl;
   }
 
-  public joinHelloRoom(username: string): void {
-    console.log("Joining hello room");
-    this.socket.emit("join_hello_room", username);
-  }
-
   public joinRoom(username: string, roomName: string): void {
     this.socket.emit("join_room", { username, roomName });
   }
@@ -30,12 +25,6 @@ export default class SocketService {
     });
   }
 
-  public onReceiveLogs(callback: (log: string) => void): void {
-    this.socket.on("receive_logs", (log) => {
-      callback(log);
-    });
-  }
-
   public sendMessage(username: string, message: string): void {
     this.socket.emit("send_message", { author: username, content: message });
   }
@@ -43,7 +32,6 @@ export default class SocketService {
   public onUserJoined(callback: (user: string) => void): void {
     this.socket.on("joined_room", (user) => {
       callback(user);
-      console.log(`User ${user} joined the room`);
     });
   }
 
