@@ -37,6 +37,14 @@ export default function Home() {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
+    socket.onUserLeft((username) => {
+      const newMessage: Message = {
+        author: username,
+        content: `has left the room ${roomName}`,
+      };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
     if (roomName) {
       socket.joinRoom(username, roomName);
     } else {

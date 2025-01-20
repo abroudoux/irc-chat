@@ -38,13 +38,19 @@ export default class SocketService {
   }
 
   public onUserJoined(callback: (user: string) => void): void {
-    this.socket.on("joined_room", (user) => {
+    this.socket.on("user_joined_room", (user) => {
       callback(user);
     });
   }
 
   public onUserAlreadyExists(callback: (user: string) => void): void {
     this.socket.on("user_already_exists", (user) => {
+      callback(user);
+    });
+  }
+
+  public onUserLeft(callback: (user: string) => void): void {
+    this.socket.on("user_left_room", (user) => {
       callback(user);
     });
   }

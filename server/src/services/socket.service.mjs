@@ -30,9 +30,17 @@ export default class SocketService {
       });
 
       socket.on("disconnect", () => {
-        this.usersConnected = this.usersConnected.filter(
-          (user) => user.socketId !== socket.id
+        const user = this.usersConnected.find(
+          (user) => user.socketId === socket.id
         );
+        if (user) {
+          this.emitUserLeftRoom(user.roomName, user.username);
+          this.usersConnected = this.usersConnected.filter(
+            (u) => u.socketId !== socket.id
+          );
+          console.log(`User disconnected: ${socket.id}`);
+          console.log("Updated users connected:", this.usersConnected);
+        }
       });
     });
   }
@@ -59,7 +67,11 @@ export default class SocketService {
   }
 
   emitUserJoinedRoom(roomName, username) {
-    this.io.to(roomName).emit("joined_room", username);
+    this.io.to(roomName).emit("user_joined_room", username);
+  }
+
+  emitUserLeftRoom(roomName, username) {
+    this.io.to(roomName).emit("user_left_room", username);
   }
 
   sendMessage(author, roomName, content) {
