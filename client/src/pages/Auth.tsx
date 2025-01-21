@@ -9,14 +9,22 @@ export default function Auth() {
   const navigate = useNavigate();
   const { setUsername } = useStore();
   const [usernameState, setUsernameState] = useState<string>("");
+  const [room, setRoom] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function auth(e: FormEvent) {
     e.preventDefault();
+
     if (usernameState.trim() === "") return;
+
     setIsLoading(true);
     setUsername(usernameState);
-    navigate("/");
+
+    if (room.trim() !== "") {
+      navigate(`/${room}`);
+    } else {
+      navigate("/");
+    }
     setIsLoading(false);
   }
 
@@ -32,6 +40,13 @@ export default function Auth() {
           className="max-w-lg"
           value={usernameState}
           onChange={(e) => setUsernameState(e.target.value)}
+        />
+        <Input
+          type="text"
+          placeholder="Enter a room (optional)"
+          className="max-w-lg"
+          value={room}
+          onChange={(e) => setRoom(e.target.value)}
         />
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : "Start chatting"}
