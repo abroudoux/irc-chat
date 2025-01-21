@@ -1,13 +1,17 @@
-import { Server, Socket } from "socket.io";
+import { Server, Socket, DefaultEventsMap } from "socket.io";
 import http from "http";
 
 import type { UserConnected } from "../utils/types";
+import RoomService from "./room.service";
+import UserService from "./user.service";
 
 export default class SocketService {
-  io;
-  usersConnected: UserConnected[];
+  public io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
+  private usersConnected: UserConnected[];
+  private roomService: RoomService;
+  private userService: UserService;
 
-  constructor(
+  public constructor(
     server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
   ) {
     this.io = new Server(server, {
@@ -20,9 +24,11 @@ export default class SocketService {
 
     this.init();
     this.usersConnected = [];
+    this.roomService = RoomService.getInstance();
+    this.userService = UserService.getInstance();
   }
 
-  init() {
+  private init() {
     this.io.on("connection", (socket) => {
       console.log(`User connected: ${socket.id}`);
 
