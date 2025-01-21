@@ -1,11 +1,7 @@
 import { Server, Socket } from "socket.io";
 import http from "http";
 
-interface UserConnected {
-  username: string;
-  roomName: string;
-  socketId: string;
-}
+import type { UserConnected } from "../utils/types";
 
 export default class SocketService {
   io;
