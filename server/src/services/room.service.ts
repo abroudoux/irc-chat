@@ -1,5 +1,7 @@
+import { Room } from "../utils/types";
+
 export default class RoomService {
-  private rooms: string[];
+  private rooms: Room[];
   private static instance: RoomService = new RoomService();
 
   private constructor() {
@@ -10,7 +12,7 @@ export default class RoomService {
     return this.instance;
   }
 
-  public getRooms(): string[] {
+  public getRooms(): Room[] {
     return this.rooms;
   }
 
@@ -19,11 +21,16 @@ export default class RoomService {
       return;
     }
 
-    this.rooms.push(roomName);
+    const roomCreated: Room = {
+      name: roomName,
+      users: [],
+    };
+
+    this.rooms.push(roomCreated);
   }
 
   private isRoomAlreadyCreated(roomName: string) {
-    return this.rooms.includes(roomName);
+    return this.getRooms().some((room) => room.name === roomName);
   }
 
   public logAllRooms(): void {
