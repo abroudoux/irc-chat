@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import InputSendMessage from "@/components/InputSendMessage";
 import Chat from "@/components/Chat";
@@ -14,22 +14,15 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const { username } = useStore();
   const roomName: string = useParams().roomName || "hello";
-  const navigate = useNavigate();
 
   useAuth();
 
   useEffect(() => {
-    const socket = SocketService.instance;
-
-    socket.onUserAlreadyExists(() => {
-      navigate("/auth");
-    });
-
-    socket.onReceiveMessage((message) => {
+    SocketService.instance.onReceiveMessage((message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    socket.onUserJoined((username) => {
+    SocketService.instance.onUserJoined((username) => {
       const newMessage: Message = {
         author: username,
         content: `has joined the room ${roomName}`,
@@ -37,30 +30,24 @@ export default function Home() {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
-    socket.onUserLeft((username) => {
-      const newMessage: Message = {
-        author: username,
-        content: `has left the room ${roomName}`,
-      };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
-
     if (roomName) {
-      socket.joinRoom(username, roomName);
+      SocketService.instance.joinRoom(username, roomName);
     } else {
-      socket.joinRoom(username, "hello");
+      SocketService.instance.joinRoom(username, "hello");
     }
 
     return () => {
-      socket.offFromRoom("joined_room");
-      socket.offFromRoom("receive_message");
+      SocketService.instance.socket.off("joined_room");
+      SocketService.instance.disconnect();
     };
   }, [SocketService.instance.getSocketUrl(), username]);
 
   return (
     <SectionLayout className="w-screen h-screen flex flex-row justify-start items-start">
-      <BtnLogoutUser />
-      <div className="h-full">
+      <div className="h-full flex flex-col items-center justify-end pb-8">
+        <BtnLogoutUser />
+      </div>
+      <div>
         <Chat messages={messages} username={username} roomName={roomName} />
         <InputSendMessage
           socket={SocketService.instance}

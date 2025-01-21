@@ -65,8 +65,26 @@ export default function InputSendMessage(props: InputSendMessageProps) {
         setUsername(argument);
         navigate(0);
         break;
+      case "list":
+        console.log("list command");
+        break;
+      case "create":
+        console.log("create command");
+        break;
+      case "delete":
+        console.log("delete command");
+        break;
       case "join":
         navigate(`/${argument}`);
+        break;
+      case "quit":
+        console.log("quit command");
+        break;
+      case "users":
+        console.log("users command");
+        break;
+      case "msg":
+        console.log("msg command");
         break;
       default:
         console.log(`Unknown command: ${command}`);
