@@ -1,10 +1,19 @@
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
+import http from "http";
+
+interface UserConnected {
+  username: string;
+  roomName: string;
+  socketId: string;
+}
 
 export default class SocketService {
   io;
-  usersConnected;
+  usersConnected: UserConnected[];
 
-  constructor(server) {
+  constructor(
+    server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
+  ) {
     this.io = new Server(server, {
       cors: {
         origin: ["http://localhost:5173"],
@@ -45,7 +54,7 @@ export default class SocketService {
     });
   }
 
-  joinRoom(socket, data) {
+  joinRoom(socket: Socket, data: any) {
     if (this.userAlreadyExists(data.username)) {
       this.emitUserAlreadyExists(socket, data);
       return;
@@ -54,27 +63,32 @@ export default class SocketService {
     const { username, roomName } = data;
     socket.join(roomName);
     this.emitUserJoinedRoom(roomName, username);
+    const userToAdd: UserConnected = {
+      username,
+      roomName,
+      socketId: socket.id,
+    };
 
-    this.usersConnected.push({ username, roomName, socketId: socket.id });
+    this.usersConnected.push(userToAdd);
   }
 
-  userAlreadyExists(username) {
+  userAlreadyExists(username: string) {
     return this.usersConnected.some((user) => user.username === username);
   }
 
-  emitUserAlreadyExists(socket, data) {
+  emitUserAlreadyExists(socket: Socket, data: any) {
     socket.emit("user_already_exists", data.username);
   }
 
-  emitUserJoinedRoom(roomName, username) {
+  emitUserJoinedRoom(roomName: string, username: string) {
     this.io.to(roomName).emit("user_joined_room", username);
   }
 
-  emitUserLeftRoom(roomName, username) {
+  emitUserLeftRoom(roomName: string, username: string) {
     this.io.to(roomName).emit("user_left_room", username);
   }
 
-  sendMessage(author, roomName, content) {
+  sendMessage(author: string, roomName: string, content: string) {
     this.io
       .to(roomName)
       .emit("receive_message", { author: author, content: content });
