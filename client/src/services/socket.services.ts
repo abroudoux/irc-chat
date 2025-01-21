@@ -1,19 +1,30 @@
 import { Socket, io } from "socket.io-client";
+import type { User } from "@irc-chat/shared/types";
 
 import { Message } from "@/utils/interfaces";
 
 export default class SocketService {
-  public socket: Socket;
   public static instance: SocketService = new SocketService();
+  private socket: Socket;
   private socketUrl: string = "http://localhost:3000";
 
   public constructor() {
     this.socket = io(this.socketUrl);
   }
 
+  public static getInstance(): SocketService {
+    return this.instance;
+  }
+
+  public getSocket(): Socket {
+    return this.socket;
+  }
+
   public getSocketUrl(): string {
     return this.socketUrl;
   }
+
+  public createUser(username: string): User;
 
   public joinRoom(username: string, roomName: string): void {
     this.socket.emit("join_room", { username, roomName });

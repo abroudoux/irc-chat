@@ -22,6 +22,10 @@ export default function Home() {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
+    SocketService.instance.getSocket().on("connect", () => {
+      SocketService.instance.getSocket().emit("create_user", username);
+    });
+
     SocketService.instance.onUserJoined((username) => {
       const newMessage: Message = {
         author: username,
@@ -37,7 +41,7 @@ export default function Home() {
     }
 
     return () => {
-      SocketService.instance.socket.off("joined_room");
+      SocketService.instance.getSocket().off("joined_room");
       SocketService.instance.disconnect();
     };
   }, [SocketService.instance.getSocketUrl(), username]);

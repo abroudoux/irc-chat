@@ -1,4 +1,4 @@
-import type { User } from "../utils/types";
+import type { User } from "@irc-chat/shared/types";
 
 export default class UserService {
   private static instance = new UserService();

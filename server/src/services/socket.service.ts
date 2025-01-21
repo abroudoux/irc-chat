@@ -1,4 +1,5 @@
 import { Server, Socket, DefaultEventsMap } from "socket.io";
+import type { User } from "@irc-chat/shared/types";
 import http from "http";
 
 import RoomService from "./room.service";
@@ -33,6 +34,13 @@ export default class SocketService {
     this.io.on("connection", (socket) => {
       console.log(`User connected: ${socket.id}`);
 
+      const user = socket.on("create_user", (username: string) => {
+        this.createUser(socket, username);
+      });
+      if (!user) {
+        return;
+      }
+
       socket.on("join_room", (data) => {
         this.joinRoom(socket, data);
       });
@@ -56,6 +64,19 @@ export default class SocketService {
         console.log(`User disconnected: ${socket.id}`);
       });
     });
+  }
+
+  private createUser(socket: Socket, username: string): User | null {
+    const user = this.userService.createUser(socket.id, username);
+    if (!user) {
+      this.emitUserAlreadyExists(socket, username);
+      console.error(`User ${username} already exists`);
+      return null;
+    }
+
+    console.log("user created from createUser SocketService", user);
+
+    return user;
   }
 
   joinRoom(socket: Socket, data: any) {

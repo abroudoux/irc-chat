@@ -1,4 +1,4 @@
-import { Room, User } from "@utils/types";
+import type { User, Room } from "@irc-chat/shared/types";
 
 export default class RoomService {
   private static instance: RoomService = new RoomService();
