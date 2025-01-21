@@ -1,10 +1,10 @@
-import { Room } from "../utils/types";
+import { Room, User } from "@utils/types";
 
 export default class RoomService {
-  private rooms: Room[];
   private static instance: RoomService = new RoomService();
+  private rooms: Room[];
 
-  private constructor() {
+  public constructor() {
     this.rooms = [];
   }
 
@@ -14,6 +14,10 @@ export default class RoomService {
 
   public getRooms(): Room[] {
     return this.rooms;
+  }
+
+  public getRoom(roomName: string): Room | null {
+    return this.getRooms().find((room) => room.name === roomName) || null;
   }
 
   public createRoom(roomName: string): void {
@@ -33,7 +37,29 @@ export default class RoomService {
     return this.getRooms().some((room) => room.name === roomName);
   }
 
+  public addUserToRoom(roomName: string, user: User): void {
+    const room = this.getRoom(roomName);
+    if (!room) {
+      console.error(`Room ${roomName} not found`);
+      return;
+    }
+
+    room?.users.push(user);
+  }
+
   public logAllRooms(): void {
+    console.log("ALL ROOMS:");
     console.log(this.getRooms());
+  }
+
+  public logUsersFromRoom(roomName: string): void {
+    console.log(`USERS FROM ROOM ${roomName}:`);
+    const room = this.getRoom(roomName);
+    if (!room) {
+      console.error(`Room ${roomName} not found`);
+      return;
+    }
+
+    console.log(room.users);
   }
 }

@@ -12,23 +12,24 @@ export default class UserService {
     return this.instance;
   }
 
+  public getUser(user: User): User | null {
+    return this.getUsers().find((u) => u.id === user.id) || null;
+  }
+
   public getUsers(): User[] {
     return this.users;
   }
 
-  public createUser(id: string, username: string): boolean {
-    if (this.isUserNameAlreadyUsed(username)) {
-      return false;
-    }
+  public createUser(id: string, username: string): User | null {
+    if (this.isUserNameAlreadyUsed(username)) return null;
 
-    const userToAdd: User = {
+    const userCreated: User = {
       id,
       username,
-      rooms: [],
     };
-    this.users.push(userToAdd);
+    this.users.push(userCreated);
 
-    return true;
+    return userCreated;
   }
 
   private isUserNameAlreadyUsed(usernameProvided: string): boolean {
@@ -36,6 +37,7 @@ export default class UserService {
   }
 
   public logAllUsers(): void {
+    console.log("ALL USERS:");
     console.log(this.getUsers());
   }
 }

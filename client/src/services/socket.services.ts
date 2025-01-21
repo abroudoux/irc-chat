@@ -45,6 +45,7 @@ export default class SocketService {
 
   public onUserAlreadyExists(callback: (user: string) => void): void {
     this.socket.on("user_already_exists", (user) => {
+      console.log("oups");
       callback(user);
     });
   }

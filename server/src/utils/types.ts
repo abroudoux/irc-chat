@@ -7,7 +7,6 @@ export type UserConnected = {
 export type User = {
   id: string;
   username: string;
-  rooms: Room[];
 };
 
 export type Room = {

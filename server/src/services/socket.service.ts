@@ -1,29 +1,30 @@
 import { Server, Socket, DefaultEventsMap } from "socket.io";
 import http from "http";
 
-import type { UserConnected } from "../utils/types";
 import RoomService from "./room.service";
 import UserService from "./user.service";
 
 export default class SocketService {
   public io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
-  private usersConnected: UserConnected[];
   private roomService: RoomService;
   private userService: UserService;
 
   public constructor(
-    server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
+    server: http.Server<
+      typeof http.IncomingMessage,
+      typeof http.ServerResponse
+    >,
+    origins: string[]
   ) {
     this.io = new Server(server, {
       cors: {
-        origin: ["http://localhost:5173"],
+        origin: origins,
         methods: ["GET", "POST"],
         allowedHeaders: ["Content-Type", "Authorization"],
       },
     });
 
     this.init();
-    this.usersConnected = [];
     this.roomService = RoomService.getInstance();
     this.userService = UserService.getInstance();
   }
@@ -41,45 +42,42 @@ export default class SocketService {
       });
 
       socket.on("disconnect", () => {
-        const user = this.usersConnected.find(
-          (user) => user.socketId === socket.id
-        );
-        if (user) {
-          this.emitUserLeftRoom(user.roomName, user.username);
-          this.usersConnected = this.usersConnected.filter(
-            (u) => u.socketId !== socket.id
-          );
-          console.log(`User disconnected: ${socket.id}`);
-          console.log("Updated users connected:", this.usersConnected);
-        }
+        // const user = this.usersConnected.find(
+        //   (user) => user.socketId === socket.id
+        // );
+        // if (user) {
+        //   this.emitUserLeftRoom(user.roomName, user.username);
+        //   this.usersConnected = this.usersConnected.filter(
+        //     (u) => u.socketId !== socket.id
+        //   );
+        //   console.log(`User disconnected: ${socket.id}`);
+        //   console.log("Updated users connected:", this.usersConnected);
+        // }
+        console.log(`User disconnected: ${socket.id}`);
       });
     });
   }
 
   joinRoom(socket: Socket, data: any) {
-    if (this.userAlreadyExists(data.username)) {
-      this.emitUserAlreadyExists(socket, data);
+    const { username, roomName } = data;
+    const user = this.userService.createUser(socket.id, username);
+    if (!user) {
+      this.emitUserAlreadyExists(socket, username);
+      console.error(`User ${username} already exists`);
       return;
     }
 
-    const { username, roomName } = data;
     socket.join(roomName);
     this.emitUserJoinedRoom(roomName, username);
-    const userToAdd: UserConnected = {
-      username,
-      roomName,
-      socketId: socket.id,
-    };
 
-    this.usersConnected.push(userToAdd);
+    this.roomService.createRoom(roomName);
+    this.roomService.addUserToRoom(roomName, user);
+    this.roomService.logAllRooms();
+    this.roomService.logUsersFromRoom(roomName);
   }
 
-  userAlreadyExists(username: string) {
-    return this.usersConnected.some((user) => user.username === username);
-  }
-
-  emitUserAlreadyExists(socket: Socket, data: any) {
-    socket.emit("user_already_exists", data.username);
+  emitUserAlreadyExists(socket: Socket, username: string) {
+    socket.emit("user_already_exists", username);
   }
 
   emitUserJoinedRoom(roomName: string, username: string) {
