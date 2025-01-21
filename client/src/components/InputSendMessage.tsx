@@ -6,7 +6,19 @@ import type { InputSendMessageProps } from "@/utils/interfaces";
 
 export default function InputSendMessage(props: InputSendMessageProps) {
   const [message, setMessage] = useState<string>("");
+  const [tooltip, setTooltip] = useState<string[] | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const commands: string[] = [
+    "/nick --Change your username",
+    "/list --List all available rooms",
+    "/create --Create a new room",
+    "/delete --Delete a room",
+    "/join --Join a room",
+    "/quit --Leave a room",
+    "/users --List all users in a room",
+    "/msg --Send a private message",
+  ];
 
   useEffect(() => {
     if (inputRef.current) {
@@ -16,6 +28,10 @@ export default function InputSendMessage(props: InputSendMessageProps) {
 
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     setMessage(e.target.value);
+
+    if (e.target.value.startsWith("/")) {
+      setTooltip(commands);
+    }
   }
 
   function sendMessage(e: React.FormEvent) {
@@ -32,6 +48,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
     }
 
     setMessage("");
+    setTooltip(null);
   }
 
   function handleCommand(command: string, username: string) {
@@ -54,6 +71,13 @@ export default function InputSendMessage(props: InputSendMessageProps) {
         className="flex w-full items-center space-x-2 fixed bottom-16 justify-start"
         onSubmit={sendMessage}
       >
+        {tooltip && (
+          <ul className="absolute bg-background shadow text-foreground p-2 rounded-md mb-64 ml-2 w-4xl">
+            {tooltip.map((command, index) => (
+              <li key={index}>{command}</li>
+            ))}
+          </ul>
+        )}
         <Input
           ref={inputRef}
           type="text"
