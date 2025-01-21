@@ -1,5 +1,5 @@
 {
-  "name": "irc-server",
+  "name": "@irc-chat/server",
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
@@ -7,11 +7,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "@irc-chat/shared": "workspace:*",
+    "@types/cors": "^2.8.17",
+    "cors": "^2.8.5",
     "express": "^4.21.2",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
-    "@irc-chat/shared": "1.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",

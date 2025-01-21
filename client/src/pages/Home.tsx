@@ -22,9 +22,7 @@ export default function Home() {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    SocketService.instance.getSocket().on("connect", () => {
-      SocketService.instance.getSocket().emit("create_user", username);
-    });
+    SocketService.instance.createUser(username);
 
     SocketService.instance.onUserJoined((username) => {
       const newMessage: Message = {

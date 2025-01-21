@@ -1,5 +1,4 @@
 import { Socket, io } from "socket.io-client";
-import type { User } from "@irc-chat/shared/types";
 
 import { Message } from "@/utils/interfaces";
 
@@ -24,7 +23,9 @@ export default class SocketService {
     return this.socketUrl;
   }
 
-  public createUser(username: string): User;
+  public createUser(username: string): void {
+    this.socket.emit("create_user", username);
+  }
 
   public joinRoom(username: string, roomName: string): void {
     this.socket.emit("join_room", { username, roomName });

@@ -1,5 +1,5 @@
 {
-  "name": "irc-chat",
+  "name": "@irc-chat/monorepo",
   "version": "1.0.0",
   "scripts": {
     "dev": "pnpm -r --parallel run dev",

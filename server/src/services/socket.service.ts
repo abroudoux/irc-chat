@@ -33,13 +33,12 @@ export default class SocketService {
   private init() {
     this.io.on("connection", (socket) => {
       console.log(`User connected: ${socket.id}`);
+      let user: User | null = null;
 
-      const user = socket.on("create_user", (username: string) => {
-        this.createUser(socket, username);
+      socket.on("create_user", (username: string) => {
+        user = this.createUser(socket, username);
+        console.log("User created:", user);
       });
-      if (!user) {
-        return;
-      }
 
       socket.on("join_room", (data) => {
         this.joinRoom(socket, data);
@@ -74,12 +73,10 @@ export default class SocketService {
       return null;
     }
 
-    console.log("user created from createUser SocketService", user);
-
     return user;
   }
 
-  joinRoom(socket: Socket, data: any) {
+  private joinRoom(socket: Socket, data: any) {
     const { username, roomName } = data;
     const user = this.userService.createUser(socket.id, username);
     if (!user) {
