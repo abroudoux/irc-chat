@@ -1,13 +1,18 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SectionLayout from "@/components/layouts/SectionLayout";
+import useStore from "@/lib/store";
 import type { InputSendMessageProps } from "@/utils/interfaces";
 
 export default function InputSendMessage(props: InputSendMessageProps) {
   const [message, setMessage] = useState<string>("");
   const [tooltip, setTooltip] = useState<string[] | null>(null);
+  const { setUsername } = useStore();
   const inputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const commands: string[] = [
     "/nick --Change your username",
@@ -42,7 +47,9 @@ export default function InputSendMessage(props: InputSendMessageProps) {
     const roomName: string = props.roomName;
 
     if (message.startsWith("/")) {
-      handleCommand(message.slice(1), username);
+      const command: string = message.split(" ")[0].slice(1);
+      const argument: string = message.split(" ")[1];
+      handleCommand(command, argument, username);
     } else {
       props.socket.sendMessage(roomName, username, message);
     }
@@ -51,13 +58,15 @@ export default function InputSendMessage(props: InputSendMessageProps) {
     setTooltip(null);
   }
 
-  function handleCommand(command: string, username: string) {
+  function handleCommand(command: string, argument: string, username: string) {
+    console.log(`Command: ${command}, Argument: ${argument}`);
     switch (command.toLowerCase()) {
-      case "help":
-        console.log("Displaying help information...");
+      case "nick":
+        setUsername(argument);
+        navigate(0);
         break;
-      case "clear":
-        console.log("Clearing messages...");
+      case "join":
+        navigate(`/${argument}`);
         break;
       default:
         console.log(`Unknown command: ${command}`);
