@@ -30,6 +30,10 @@ export default class UserService {
     return userCreated;
   }
 
+  public removeUser(userId: string): void {
+    this.users = this.users.filter((user) => user.id !== userId);
+  }
+
   public isUsernameAlreadyUsed(username: string): boolean {
     return this.getUsers().some((user) => user.username === username);
   }

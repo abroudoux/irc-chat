@@ -38,10 +38,10 @@ export default function Home() {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    // return () => {
-    //   SocketService.instance.getSocket().off("joined_room");
-    //   SocketService.instance.disconnect();
-    // };
+    return () => {
+      // SocketService.instance.getSocket().off("joined_room");
+      SocketService.instance.disconnect();
+    };
   }, [SocketService.instance.getSocketUrl(), username]);
 
   return (

@@ -62,4 +62,10 @@ export default class RoomService {
 
     console.log(room.users);
   }
+
+  public removeUserFromRooms(socketId: string): void {
+    this.getRooms().forEach((room) => {
+      room.users = room.users.filter((user) => user.id !== socketId);
+    });
+  }
 }

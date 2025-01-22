@@ -60,24 +60,17 @@ export default class SocketService {
         console.log(
           `User ${
             this.getUserConnected().username
-          } sent a message to room ${roomName}.
-          Message: ${message}`
+          } sent a message to room ${roomName}: ${message}`
         );
       });
 
       socket.on("disconnect", () => {
-        // const user = this.usersConnected.find(
-        //   (user) => user.socketId === socket.id
-        // );
-        // if (user) {
-        //   this.emitUserLeftRoom(user.roomName, user.username);
-        //   this.usersConnected = this.usersConnected.filter(
-        //     (u) => u.socketId !== socket.id
-        //   );
-        //   console.log(`User disconnected: ${socket.id}`);
-        //   console.log("Updated users connected:", this.usersConnected);
-        // }
-        console.log(`User disconnected: ${socket.id}`);
+        this.roomService.removeUserFromRooms(this.getUserConnected().id);
+        this.userService.removeUser(this.getUserConnected().id);
+
+        this.emitUserLeftRoom(this.getUserConnected().username);
+        this.userConnected = null;
+        console.log("User disconnected.");
       });
     });
   }
@@ -96,9 +89,13 @@ export default class SocketService {
     return user;
   }
 
+  private emitUserAlreadyExists(socket: Socket, username: string) {
+    socket.emit("user_already_exists", username);
+  }
+
   private joinRoom(socket: Socket, roomName: string) {
     socket.join(roomName);
-    this.emitUserJoinedRoom(roomName, this.getUserConnected().username);
+    this.emitUserJoinedRoom(roomName);
     this.roomService.createRoom(roomName);
     this.roomService.addUserToRoom(roomName, this.getUserConnected());
   }
@@ -110,15 +107,15 @@ export default class SocketService {
     });
   }
 
-  emitUserAlreadyExists(socket: Socket, username: string) {
-    socket.emit("user_already_exists", username);
+  private emitUserJoinedRoom(roomName: string) {
+    this.io
+      .to(roomName)
+      .emit("user_joined_room", this.getUserConnected().username);
   }
 
-  emitUserJoinedRoom(roomName: string, username: string) {
-    this.io.to(roomName).emit("user_joined_room", username);
-  }
-
-  emitUserLeftRoom(roomName: string, username: string) {
-    this.io.to(roomName).emit("user_left_room", username);
+  private emitUserLeftRoom(roomName: string) {
+    this.io
+      .to(roomName)
+      .emit("user_left_room", this.getUserConnected().username);
   }
 }
