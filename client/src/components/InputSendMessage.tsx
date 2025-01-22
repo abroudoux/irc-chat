@@ -51,7 +51,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
       const argument: string = message.split(" ")[1];
       handleCommand(command, argument, username);
     } else {
-      props.socket.sendMessage(roomName, username, message);
+      props.socket.sendMessage(roomName, message);
     }
 
     setMessage("");

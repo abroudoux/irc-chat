@@ -45,15 +45,24 @@ export default class SocketService {
     this.io.on("connection", (socket: Socket) => {
       socket.on("create_user", (username: string) => {
         this.userConnected = this.createUser(socket, username);
-        console.log("User created:", this.userConnected);
+        console.log(`User ${this.getUserConnected().username} created.`);
       });
 
       socket.on("join_room", (roomName: string) => {
         this.joinRoom(socket, roomName);
+        console.log(
+          `User ${this.getUserConnected().username} joined room ${roomName}.`
+        );
       });
 
-      socket.on("send_message", (data) => {
-        this.sendMessage(data.author, data.roomName, data.content);
+      socket.on("send_message", (roomName: string, message: string) => {
+        this.emitMessage(roomName, message);
+        console.log(
+          `User ${
+            this.getUserConnected().username
+          } sent a message to room ${roomName}.
+          Message: ${message}`
+        );
       });
 
       socket.on("disconnect", () => {
@@ -90,11 +99,15 @@ export default class SocketService {
   private joinRoom(socket: Socket, roomName: string) {
     socket.join(roomName);
     this.emitUserJoinedRoom(roomName, this.getUserConnected().username);
-
     this.roomService.createRoom(roomName);
     this.roomService.addUserToRoom(roomName, this.getUserConnected());
-    this.roomService.logAllRooms();
-    this.roomService.logUsersFromRoom(roomName);
+  }
+
+  private emitMessage(roomName: string, content: string) {
+    this.io.to(roomName).emit("receive_message", {
+      author: this.getUserConnected().username,
+      content: content,
+    });
   }
 
   emitUserAlreadyExists(socket: Socket, username: string) {
@@ -107,11 +120,5 @@ export default class SocketService {
 
   emitUserLeftRoom(roomName: string, username: string) {
     this.io.to(roomName).emit("user_left_room", username);
-  }
-
-  sendMessage(author: string, roomName: string, content: string) {
-    this.io
-      .to(roomName)
-      .emit("receive_message", { author: author, content: content });
   }
 }
