@@ -6,14 +6,14 @@ import SocketService from "./services/socket.service";
 
 const PORT: number = 3000;
 const CLIENT_URL: string = "http://localhost:5173";
-const app: Express = express();
+const APP: Express = express();
 
-app.use(cors());
-app.use(express.json());
+APP.use(cors());
+APP.use(express.json());
 
-const server = http.createServer(app);
+const server = http.createServer(APP);
 const _ = new SocketService(server, [CLIENT_URL]);
 
 server.listen(PORT, () => {
-  console.log(`Server is listening on *:${PORT}`);
+  console.log(`Server is listening on port ${PORT}`);
 });
