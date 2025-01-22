@@ -27,8 +27,8 @@ export default class SocketService {
     this.socket.emit("create_user", username);
   }
 
-  public joinRoom(username: string, roomName: string): void {
-    this.socket.emit("join_room", { username, roomName });
+  public joinRoom(roomName: string): void {
+    this.socket.emit("join_room", roomName);
   }
 
   public onReceiveMessage(callback: (message: Message) => void): void {

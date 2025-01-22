@@ -20,9 +20,7 @@ export default class UserService {
     return this.users;
   }
 
-  public createUser(id: string, username: string): User | null {
-    if (this.isUserNameAlreadyUsed(username)) return null;
-
+  public createUser(id: string, username: string): User {
     const userCreated: User = {
       id,
       username,
@@ -32,8 +30,8 @@ export default class UserService {
     return userCreated;
   }
 
-  private isUserNameAlreadyUsed(usernameProvided: string): boolean {
-    return this.getUsers().some((user) => user.username === usernameProvided);
+  public isUsernameAlreadyUsed(username: string): boolean {
+    return this.getUsers().some((user) => user.username === username);
   }
 
   public logAllUsers(): void {

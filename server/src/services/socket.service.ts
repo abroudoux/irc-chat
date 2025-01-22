@@ -1,14 +1,16 @@
 import { Server, Socket, DefaultEventsMap } from "socket.io";
-import type { User } from "@irc-chat/shared/types";
 import http from "http";
+
+import type { User } from "@irc-chat/shared/types";
 
 import RoomService from "./room.service";
 import UserService from "./user.service";
 
 export default class SocketService {
-  public io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
+  private io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
   private roomService: RoomService;
   private userService: UserService;
+  private userConnected: User | null;
 
   public constructor(
     server: http.Server<
@@ -28,20 +30,26 @@ export default class SocketService {
     this.init();
     this.roomService = RoomService.getInstance();
     this.userService = UserService.getInstance();
+    this.userConnected = null;
+  }
+
+  public getUserConnected(): User {
+    if (!this.userConnected) {
+      throw new Error("No user connected");
+    }
+
+    return this.userConnected;
   }
 
   private init() {
-    this.io.on("connection", (socket) => {
-      console.log(`User connected: ${socket.id}`);
-      let user: User | null = null;
-
+    this.io.on("connection", (socket: Socket) => {
       socket.on("create_user", (username: string) => {
-        user = this.createUser(socket, username);
-        console.log("User created:", user);
+        this.userConnected = this.createUser(socket, username);
+        console.log("User created:", this.userConnected);
       });
 
-      socket.on("join_room", (data) => {
-        this.joinRoom(socket, data);
+      socket.on("join_room", (roomName: string) => {
+        this.joinRoom(socket, roomName);
       });
 
       socket.on("send_message", (data) => {
@@ -66,30 +74,25 @@ export default class SocketService {
   }
 
   private createUser(socket: Socket, username: string): User | null {
-    const user = this.userService.createUser(socket.id, username);
-    if (!user) {
+    const usernameAlreadyUsed: boolean =
+      this.userService.isUsernameAlreadyUsed(username);
+
+    if (usernameAlreadyUsed) {
       this.emitUserAlreadyExists(socket, username);
       console.error(`User ${username} already exists`);
       return null;
     }
 
+    const user: User = this.userService.createUser(socket.id, username);
     return user;
   }
 
-  private joinRoom(socket: Socket, data: any) {
-    const { username, roomName } = data;
-    const user = this.userService.createUser(socket.id, username);
-    if (!user) {
-      this.emitUserAlreadyExists(socket, username);
-      console.error(`User ${username} already exists`);
-      return;
-    }
-
+  private joinRoom(socket: Socket, roomName: string) {
     socket.join(roomName);
-    this.emitUserJoinedRoom(roomName, username);
+    this.emitUserJoinedRoom(roomName, this.getUserConnected().username);
 
     this.roomService.createRoom(roomName);
-    this.roomService.addUserToRoom(roomName, user);
+    this.roomService.addUserToRoom(roomName, this.getUserConnected());
     this.roomService.logAllRooms();
     this.roomService.logUsersFromRoom(roomName);
   }
