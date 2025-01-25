@@ -1,5 +1,9 @@
+import type { Request, Response } from "express";
+
 import UserService from "./user.service";
 import RoomService from "./room.service";
+
+import type { User } from "@irc-chat/shared/types";
 
 export default class HttpService {
   private userService: UserService;
@@ -10,11 +14,8 @@ export default class HttpService {
     this.roomService = roomService;
   }
 
-  public getUserService(): UserService {
-    return this.userService;
-  }
-
-  public getRoomService(): RoomService {
-    return this.roomService;
-  }
+  public getUsers = (req: Request, res: Response): void => {
+    const users: User[] = this.userService.getUsers();
+    res.json(users);
+  };
 }

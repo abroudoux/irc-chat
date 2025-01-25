@@ -9,9 +9,6 @@ export default class UserService {
   }
 
   public static getInstance(): UserService {
-    if (!UserService.instance) {
-      UserService.instance = new UserService();
-    }
     return UserService.instance;
   }
 

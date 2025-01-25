@@ -9,9 +9,6 @@ export default class RoomService {
   }
 
   public static getInstance(): RoomService {
-    if (!RoomService.instance) {
-      RoomService.instance = new RoomService();
-    }
     return RoomService.instance;
   }
 

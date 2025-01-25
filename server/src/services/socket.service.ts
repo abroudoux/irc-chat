@@ -17,7 +17,9 @@ export default class SocketService {
       typeof http.IncomingMessage,
       typeof http.ServerResponse
     >,
-    origins: string[]
+    origins: string[],
+    userService: UserService,
+    roomService: RoomService
   ) {
     this.io = new Server(server, {
       cors: {
@@ -28,8 +30,8 @@ export default class SocketService {
     });
 
     this.init();
-    this.userService = new UserService();
-    this.roomService = new RoomService();
+    this.userService = userService;
+    this.roomService = roomService;
     this.userConnected = null;
   }
 
