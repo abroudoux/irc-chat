@@ -1,7 +1,7 @@
 import type { User, Room } from "@irc-chat/shared/types";
 
 export default class RoomService {
-  private static instance: RoomService = new RoomService();
+  private static instance: RoomService;
   private rooms: Room[];
 
   public constructor() {
@@ -9,7 +9,10 @@ export default class RoomService {
   }
 
   public static getInstance(): RoomService {
-    return this.instance;
+    if (!RoomService.instance) {
+      RoomService.instance = new RoomService();
+    }
+    return RoomService.instance;
   }
 
   public getRooms(): Room[] {

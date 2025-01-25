@@ -8,9 +8,9 @@ import UserService from "./user.service";
 
 export default class SocketService {
   private io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
-  private roomService: RoomService;
-  private userService: UserService;
   private userConnected: User | null;
+  private userService: UserService;
+  private roomService: RoomService;
 
   public constructor(
     server: http.Server<
@@ -28,8 +28,8 @@ export default class SocketService {
     });
 
     this.init();
-    this.roomService = RoomService.getInstance();
-    this.userService = UserService.getInstance();
+    this.userService = new UserService();
+    this.roomService = new RoomService();
     this.userConnected = null;
   }
 

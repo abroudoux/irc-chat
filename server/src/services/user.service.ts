@@ -1,15 +1,18 @@
 import type { User } from "@irc-chat/shared/types";
 
 export default class UserService {
-  private static instance = new UserService();
+  private static instance: UserService;
   private users: User[];
 
-  private constructor() {
+  public constructor() {
     this.users = [];
   }
 
   public static getInstance(): UserService {
-    return this.instance;
+    if (!UserService.instance) {
+      UserService.instance = new UserService();
+    }
+    return UserService.instance;
   }
 
   public getUser(user: User): User | null {
