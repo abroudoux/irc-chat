@@ -39,6 +39,10 @@ export default class Server {
       this.httpService.getUsers.bind(this.httpService)
     );
 
+    application.get("/api/rooms", (req, res) => {
+      this.httpService.getRooms(req, res);
+    });
+
     application.get("/api/users/:username", (req, res) => {
       this.httpService.isUsernameAlreadyUsed(req, res);
     });

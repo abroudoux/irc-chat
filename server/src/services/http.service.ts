@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import UserService from "./user.service";
 import RoomService from "./room.service";
 
-import type { User } from "@irc-chat/shared/types";
+import type { User, Room } from "@irc-chat/shared/types";
 
 export default class HttpService {
   private userService: UserService;
@@ -17,6 +17,11 @@ export default class HttpService {
   public getUsers = (req: Request, res: Response): void => {
     const users: User[] = this.userService.getUsers();
     res.json(users);
+  };
+
+  public getRooms = (req: Request, res: Response): void => {
+    const rooms: Room[] = this.roomService.getRooms();
+    res.json(rooms);
   };
 
   public isUsernameAlreadyUsed = (req: Request, res: Response): void => {

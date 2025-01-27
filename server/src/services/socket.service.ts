@@ -29,7 +29,7 @@ export default class SocketService {
       },
     });
 
-    this.init();
+    // this.init();
     this.userService = userService;
     this.roomService = roomService;
     this.userConnected = null;
