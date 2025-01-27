@@ -38,6 +38,10 @@ export default class Server {
       "/api/users",
       this.httpService.getUsers.bind(this.httpService)
     );
+
+    application.get("/api/users/:username", (req, res) => {
+      this.httpService.isUsernameAlreadyUsed(req, res);
+    });
   }
 
   public listen(port: number) {

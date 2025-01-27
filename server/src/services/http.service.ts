@@ -18,4 +18,12 @@ export default class HttpService {
     const users: User[] = this.userService.getUsers();
     res.json(users);
   };
+
+  public isUsernameAlreadyUsed = (req: Request, res: Response): void => {
+    const { username } = req.params;
+    const usernameAlreadyUsed: boolean =
+      this.userService.isUsernameAlreadyUsed(username);
+
+    res.json({ usernameAlreadyUsed: usernameAlreadyUsed });
+  };
 }
