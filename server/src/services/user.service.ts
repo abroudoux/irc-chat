@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import type { User } from "@irc-chat/shared/types";
 
 export default class UserService {
@@ -25,7 +27,8 @@ export default class UserService {
     return this.users;
   }
 
-  public createUser(id: string, username: string): User {
+  public createUser(username: string): User {
+    const id: string = uuidv4();
     const userCreated: User = {
       id,
       username,

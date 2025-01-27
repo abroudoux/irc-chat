@@ -46,6 +46,10 @@ export default class Server {
     application.get("/api/users/:username", (req, res) => {
       this.httpService.isUsernameAlreadyUsed(req, res);
     });
+
+    application.get("/api/auth/:username", (req, res) => {
+      this.httpService.connectUser(req, res);
+    });
   }
 
   public listen(port: number) {

@@ -21,27 +21,39 @@ export default function Auth() {
   async function authenticateUser(e: FormEvent) {
     e.preventDefault();
     setIsLoading(true);
+    const username: string = usernameState;
 
-    if (usernameState.trim() === "") {
+    if (username.trim() === "") {
       setErrorMessage("Please enter a valid username.");
       setIsLoading(false);
       return;
     }
 
-    const authServiceResponse = await isUsernameAlreadyUsed(usernameState);
-
-    if (authServiceResponse instanceof Error) {
-      setErrorMessage(authServiceResponse.message);
+    const usernameAlreadyUsed = await isUsernameAlreadyUsed(username);
+    if (usernameAlreadyUsed instanceof Error) {
+      setErrorMessage(usernameAlreadyUsed.message);
       setIsLoading(false);
       return;
     }
 
-    setUsername(usernameState);
-    if (room.trim() !== "") {
-      navigate(`/${room}`);
-    } else {
-      navigate("/");
+    const connectUserResponse: AuthServiceResponse = await connectUser(
+      username
+    );
+    if (connectUserResponse.error) {
+      setErrorMessage(
+        connectUserResponse.errorMessage ?? "Error while connecting user"
+      );
+      setIsLoading(false);
+      return;
     }
+
+    console.log(connectUserResponse.user);
+    setUsername(username);
+    // if (room.trim() !== "") {
+    //   navigate(`/${room}`);
+    // } else {
+    //   navigate("/");
+    // }
     setIsLoading(false);
   }
 

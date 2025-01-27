@@ -46,7 +46,7 @@ export default class SocketService {
   private init() {
     this.io.on("connection", (socket: Socket) => {
       socket.on("create_user", (username: string) => {
-        this.userConnected = this.createUser(socket, username);
+        this.userConnected = this.createUser(username);
         console.log(`User ${this.getUserConnected().username} created.`);
       });
 
@@ -77,17 +77,17 @@ export default class SocketService {
     });
   }
 
-  private createUser(socket: Socket, username: string): User | null {
-    const usernameAlreadyUsed: boolean =
-      this.userService.isUsernameAlreadyUsed(username);
+  private createUser(username: string): User | null {
+    // const usernameAlreadyUsed: boolean =
+    //   this.userService.isUsernameAlreadyUsed(username);
 
-    if (usernameAlreadyUsed) {
-      this.emitUserAlreadyExists(socket, username);
-      console.error(`User ${username} already exists`);
-      return null;
-    }
+    // if (usernameAlreadyUsed) {
+    //   this.emitUserAlreadyExists(socket, username);
+    //   console.error(`User ${username} already exists`);
+    //   return null;
+    // }
 
-    const user: User = this.userService.createUser(socket.id, username);
+    const user: User = this.userService.createUser(username);
     return user;
   }
 
