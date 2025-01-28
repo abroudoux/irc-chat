@@ -33,7 +33,7 @@ export default class HttpService {
     res.json({ usernameAlreadyUsed: usernameAlreadyUsed });
   };
 
-  public connectUser = (req: Request, res: Response): void => {
+  public connectUser = (req: Request, res: Response): User | null => {
     const { username } = req.params;
     const usernameAlreadyUsed: boolean =
       this.userService.isUsernameAlreadyUsed(username);
@@ -43,5 +43,7 @@ export default class HttpService {
 
     res.status(usernameAlreadyUsed ? 409 : 200);
     res.json({ userCreated: userCreated });
+
+    return userCreated ?? null;
   };
 }

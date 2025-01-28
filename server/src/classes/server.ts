@@ -1,6 +1,8 @@
 import http from "http";
 import { Express } from "express";
 
+import type { User } from "@irc-chat/shared/types";
+
 import Application from "./application";
 import SocketService from "../services/socket.service";
 import HttpService from "../services/http.service";
@@ -48,7 +50,8 @@ export default class Server {
     });
 
     application.get("/api/auth/:username", (req, res) => {
-      this.httpService.connectUser(req, res);
+      const user: User | null = this.httpService.connectUser(req, res) ?? null;
+      user ? this.socketService.init(user) : null;
     });
   }
 

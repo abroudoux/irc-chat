@@ -49,11 +49,11 @@ export default function Auth() {
 
     console.log(connectUserResponse.user);
     setUsername(username);
-    // if (room.trim() !== "") {
-    //   navigate(`/${room}`);
-    // } else {
-    //   navigate("/");
-    // }
+    if (room.trim() !== "") {
+      navigate(`/${room}`);
+    } else {
+      navigate("/");
+    }
     setIsLoading(false);
   }
 

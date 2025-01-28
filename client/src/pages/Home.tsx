@@ -18,8 +18,6 @@ export default function Home() {
   useAuth();
 
   useEffect(() => {
-    SocketService.instance.createUser(username);
-
     if (roomName) {
       SocketService.instance.joinRoom(roomName);
     } else {

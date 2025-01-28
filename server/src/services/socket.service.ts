@@ -29,7 +29,6 @@ export default class SocketService {
       },
     });
 
-    // this.init();
     this.userService = userService;
     this.roomService = roomService;
     this.userConnected = null;
@@ -43,12 +42,12 @@ export default class SocketService {
     return this.userConnected;
   }
 
-  private init() {
+  public init(user: User): void {
+    console.log("init method socket.service 2");
+    this.userConnected = user;
+
     this.io.on("connection", (socket: Socket) => {
-      socket.on("create_user", (username: string) => {
-        this.userConnected = this.createUser(username);
-        console.log(`User ${this.getUserConnected().username} created.`);
-      });
+      console.log("User connected.");
 
       socket.on("join_room", (roomName: string) => {
         this.joinRoom(socket, roomName);
@@ -75,24 +74,6 @@ export default class SocketService {
         console.log("User disconnected.");
       });
     });
-  }
-
-  private createUser(username: string): User | null {
-    // const usernameAlreadyUsed: boolean =
-    //   this.userService.isUsernameAlreadyUsed(username);
-
-    // if (usernameAlreadyUsed) {
-    //   this.emitUserAlreadyExists(socket, username);
-    //   console.error(`User ${username} already exists`);
-    //   return null;
-    // }
-
-    const user: User = this.userService.createUser(username);
-    return user;
-  }
-
-  private emitUserAlreadyExists(socket: Socket, username: string) {
-    socket.emit("user_already_exists", username);
   }
 
   private joinRoom(socket: Socket, roomName: string) {

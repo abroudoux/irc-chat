@@ -24,9 +24,10 @@ export default class SocketService {
     return this.socket;
   }
 
-  public createUser(username: string): void {
-    this.socket.emit("create_user", username);
-    console.log(`User ${username} created.`);
+  public connect(username: string): void {
+    this.socket.connect();
+    this.socket.emit("new_user", username);
+    console.log(`User ${username} connected to the server`);
   }
 
   public joinRoom(roomName: string): void {
@@ -50,13 +51,6 @@ export default class SocketService {
     this.socket.on("user_joined_room", (user) => {
       callback(user);
       console.log(`User ${user} joined the room.`);
-    });
-  }
-
-  public onUserAlreadyExists(callback: (user: string) => void): void {
-    this.socket.on("user_already_exists", (user) => {
-      callback(user);
-      console.error(`User ${user} already exists.`);
     });
   }
 
