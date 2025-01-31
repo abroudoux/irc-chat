@@ -46,6 +46,10 @@ export default class UserService {
     return this.getUsers().some((user) => user.username === username);
   }
 
+  public isUserAlreadyExists(userId: string): boolean {
+    return this.getUsers().some((user) => user.id === userId);
+  }
+
   public logAllUsers(): void {
     console.log("ALL USERS:");
     console.log(this.getUsers());

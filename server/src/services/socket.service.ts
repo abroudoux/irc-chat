@@ -8,7 +8,7 @@ import UserService from "./user.service";
 
 export default class SocketService {
   private io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
-  private userConnected: User | null;
+  private user: User | null;
   private userService: UserService;
   private roomService: RoomService;
 
@@ -31,23 +31,29 @@ export default class SocketService {
 
     this.userService = userService;
     this.roomService = roomService;
-    this.userConnected = null;
+    this.user = null;
   }
 
   public getUserConnected(): User {
-    if (!this.userConnected) {
-      throw new Error("No user connected");
+    if (!this.user) {
+      throw new Error("No user connected.");
     }
 
-    return this.userConnected;
+    return this.user;
+  }
+
+  private setUser(user: User): void {
+    this.user = user;
+    console.log(`User ${user.username} connected to the server.`);
   }
 
   public init(user: User): void {
-    console.log("init method socket.service 2");
-    this.userConnected = user;
+    this.setUser(user);
 
     this.io.on("connection", (socket: Socket) => {
-      console.log("User connected.");
+      socket.on("user_connected", (username: string) => {
+        console.log(`User ${username} connected to the server.`);
+      });
 
       socket.on("join_room", (roomName: string) => {
         this.joinRoom(socket, roomName);
@@ -70,7 +76,7 @@ export default class SocketService {
         this.userService.removeUser(this.getUserConnected().id);
 
         this.emitUserLeftRoom(this.getUserConnected().username);
-        this.userConnected = null;
+        this.user = null;
         console.log("User disconnected.");
       });
     });

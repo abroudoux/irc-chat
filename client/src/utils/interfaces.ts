@@ -1,6 +1,8 @@
 export interface Store {
+  userId: string;
   username: string;
   channelSelected: string;
+  setUserId: (value: string) => void;
   setUsername: (value: string) => void;
   setChannelSelected: (value: string) => void;
 }

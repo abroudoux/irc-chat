@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import SectionLayout from "@/components/layouts/SectionLayout";
 import useStore from "@/lib/store";
 import type { InputSendMessageProps } from "@/utils/interfaces";
-import HttpService from "@/services/http.services";
+import HttpService from "@/services/http.service";
 
 export default function InputSendMessage(props: InputSendMessageProps) {
   const [message, setMessage] = useState<string>("");

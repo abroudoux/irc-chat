@@ -41,9 +41,9 @@ export default class HttpService {
       ? null
       : this.userService.createUser(username);
 
-    res.status(usernameAlreadyUsed ? 409 : 200);
+    res.status(usernameAlreadyUsed ? 409 : 201);
     res.json({ userCreated: userCreated });
 
-    return userCreated ?? null;
+    return userCreated ? userCreated : null;
   };
 }

@@ -1,7 +1,7 @@
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { isUsernameAlreadyUsed } from "@/services/auth.service";
+import AuthService from "@/services/auth.service";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useStore from "@/lib/store";
@@ -11,7 +11,7 @@ export default function Auth() {
   const { setUsername } = useStore();
   const [usernameState, setUsernameState] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [room, setRoom] = useState<string>("");
+  const [roomName, setRoomName] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function authenticateUser(e: FormEvent) {
@@ -25,9 +25,8 @@ export default function Auth() {
         return;
       }
 
-      const usernameAlreadyUsed: boolean = await isUsernameAlreadyUsed(
-        username
-      );
+      const usernameAlreadyUsed: boolean =
+        await AuthService.instance.isUsernameAlreadyUsed(username);
       if (usernameAlreadyUsed) {
         setErrorMessage(
           "This username is already used, please choose another one."
@@ -36,7 +35,7 @@ export default function Auth() {
       }
 
       setUsername(username);
-      room.trim() === "" ? navigate("/") : navigate(`/${room}`);
+      roomName.trim() === "" ? navigate("/") : navigate(`/${roomName}`);
     } catch (error) {
       console.error("An error occurred during authentication:", error);
       setErrorMessage("An unexpected error occurred. Please try again.");
@@ -65,8 +64,8 @@ export default function Auth() {
           type="text"
           placeholder="Enter a room (optional)"
           className="max-w-lg"
-          value={room}
-          onChange={(e) => setRoom(e.target.value)}
+          value={roomName}
+          onChange={(e) => setRoomName(e.target.value)}
         />
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : "Start chatting"}

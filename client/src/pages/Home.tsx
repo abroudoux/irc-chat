@@ -8,7 +8,7 @@ import BtnLogoutUser from "@/components/BtnLogoutUser";
 import useAuth from "@/hooks/useAuth";
 import useStore from "@/lib/store";
 import type { Message } from "@/utils/interfaces";
-import SocketService from "@/services/socket.services";
+import SocketService from "@/services/socket.service";
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -17,30 +17,27 @@ export default function Home() {
 
   useAuth();
 
-  useEffect(() => {
-    if (roomName) {
-      SocketService.instance.joinRoom(roomName);
-    } else {
-      SocketService.instance.joinRoom("hello");
-    }
+  // const { createAndLogUser } = useAuth();
+  // createAndLogUser().then((user) => {
+  //   if (!user) {
+  //     console.error("Error while creating user");
+  //     return;
+  //   }
 
-    SocketService.instance.onUserJoined((username) => {
-      const newMessage: Message = {
-        author: username,
-        content: `has joined the room ${roomName}`,
-      };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
+  //   SocketService.instance.setUser(user);
+  //   SocketService.instance.connect();
+  //   SocketService.instance.joinRoom(roomName);
+  // });
 
-    SocketService.instance.onReceiveMessage((message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
+  // useEffect(() => {
+  //   SocketService.instance.onReceiveMessage((message) => {
+  //     setMessages((prevMessages) => [...prevMessages, message]);
+  //   });
 
-    return () => {
-      // SocketService.instance.getSocket().off("joined_room");
-      SocketService.instance.disconnect();
-    };
-  }, [SocketService.instance.getSocketUrl(), username]);
+  //   return () => {
+  //     SocketService.instance.disconnect();
+  //   };
+  // });
 
   return (
     <SectionLayout className="w-screen h-screen flex flex-row justify-start items-start">

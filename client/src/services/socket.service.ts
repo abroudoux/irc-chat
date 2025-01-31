@@ -6,10 +6,12 @@ export default class SocketService {
   public static instance: SocketService = new SocketService();
   private socketUrl: string;
   private socket: Socket;
+  private userName: string;
 
-  public constructor() {
+  private constructor() {
     this.socketUrl = "http://localhost:3000";
     this.socket = io(this.socketUrl);
+    this.userName = "";
   }
 
   public static getInstance(): SocketService {
@@ -24,15 +26,22 @@ export default class SocketService {
     return this.socket;
   }
 
-  public connect(username: string): void {
+  public getUserName(): string {
+    return this.userName;
+  }
+
+  public setUserName(userName: string): void {
+    this.userName = userName;
+  }
+
+  public connect(): void {
     this.socket.connect();
-    this.socket.emit("new_user", username);
-    console.log(`User ${username} connected to the server`);
+    this.socket.emit("user_connected", this.getUserName());
   }
 
   public joinRoom(roomName: string): void {
     this.socket.emit("join_room", roomName);
-    console.log(`User joined room ${roomName}.`);
+    console.log(`User ${this.getUserName} joined room ${roomName}.`);
   }
 
   public onReceiveMessage(callback: (message: Message) => void): void {
