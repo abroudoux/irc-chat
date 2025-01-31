@@ -1,11 +1,7 @@
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  connectUser,
-  isUsernameAlreadyUsed,
-  type AuthServiceResponse,
-} from "@/services/auth.service";
+import { isUsernameAlreadyUsed } from "@/services/auth.service";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useStore from "@/lib/store";
@@ -29,31 +25,17 @@ export default function Auth() {
       return;
     }
 
-    const usernameAlreadyUsed = await isUsernameAlreadyUsed(username);
-    if (usernameAlreadyUsed instanceof Error) {
-      setErrorMessage(usernameAlreadyUsed.message);
-      setIsLoading(false);
-      return;
-    }
-
-    const connectUserResponse: AuthServiceResponse = await connectUser(
-      username
-    );
-    if (connectUserResponse.error) {
+    const usernameAlreadyUsed: boolean = await isUsernameAlreadyUsed(username);
+    if (usernameAlreadyUsed) {
       setErrorMessage(
-        connectUserResponse.errorMessage ?? "Error while connecting user"
+        "This username is already used, please choose another one."
       );
       setIsLoading(false);
       return;
     }
 
-    console.log(connectUserResponse.user);
     setUsername(username);
-    if (room.trim() !== "") {
-      navigate(`/${room}`);
-    } else {
-      navigate("/");
-    }
+    room.trim() === "" ? navigate("/") : navigate(`/${room}`);
     setIsLoading(false);
   }
 

@@ -36,10 +36,9 @@ export default class Server {
 
   private initializeRoutes(): void {
     const application: Express = this.application.getApp();
-    application.get(
-      "/api/users",
-      this.httpService.getUsers.bind(this.httpService)
-    );
+    application.get("/api/users", (req, res) => {
+      this.httpService.getUsers(req, res);
+    });
 
     application.get("/api/rooms", (req, res) => {
       this.httpService.getRooms(req, res);

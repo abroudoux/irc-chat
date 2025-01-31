@@ -8,7 +8,7 @@ export default function useAuth() {
   const navigate = useNavigate();
   const { username } = useStore();
 
-  async function createConnection(): Promise<boolean> {
+  async function createConnection() {
     const response = await connectUser(username);
     if (response.error) {
       console.error(response.errorMessage);

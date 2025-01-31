@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import type { Room, User } from "@irc-chat/shared/types";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SectionLayout from "@/components/layouts/SectionLayout";
 import useStore from "@/lib/store";
 import type { InputSendMessageProps } from "@/utils/interfaces";
+import HttpService from "@/services/http.services";
 
 export default function InputSendMessage(props: InputSendMessageProps) {
   const [message, setMessage] = useState<string>("");
@@ -58,6 +61,11 @@ export default function InputSendMessage(props: InputSendMessageProps) {
     setTooltip(null);
   }
 
+  async function handleGetRooms() {
+    const rooms: Room[] = await HttpService.instance.getRooms();
+    console.log(rooms);
+  }
+
   function handleCommand(command: string, argument: string, username: string) {
     console.log(`Command: ${command}, Argument: ${argument}`);
     switch (command.toLowerCase()) {
@@ -66,7 +74,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
         navigate(0);
         break;
       case "list":
-        console.log("list command");
+        handleGetRooms();
         break;
       case "create":
         console.log("create command");

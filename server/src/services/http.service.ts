@@ -16,12 +16,12 @@ export default class HttpService {
 
   public getUsers = (_: Request, res: Response): void => {
     const users: User[] = this.userService.getUsers();
-    res.json(users);
+    res.json({ users: users });
   };
 
   public getRooms = (_: Request, res: Response): void => {
     const rooms: Room[] = this.roomService.getRooms();
-    res.json(rooms);
+    res.json({ roooms: rooms });
   };
 
   public isUsernameAlreadyUsed = (req: Request, res: Response): void => {

@@ -10,13 +10,21 @@ export interface AuthServiceResponse {
 
 export async function isUsernameAlreadyUsed(
   username: string
-): Promise<boolean | Error> {
+): Promise<boolean> {
   try {
     const response = await fetch(`${API_URL}/users/${username}`);
-    return response.ok;
+    if (response.status === 409) {
+      return true;
+    }
+
+    if (!response.ok) {
+      throw new Error("Error while checking if username is already used.");
+    }
+
+    return false;
   } catch (error: unknown) {
     console.error(error);
-    return new Error("Error while checking if username is already used");
+    throw new Error("Error while checking if username is already used.");
   }
 }
 
@@ -25,15 +33,6 @@ export async function connectUser(
 ): Promise<AuthServiceResponse> {
   try {
     const response = await fetch(`${API_URL}/auth/${username}`);
-    if (response.status === 409) {
-      return {
-        user: null,
-        error: true,
-        errorMessage:
-          "This username is already used, please choose another one.",
-      };
-    }
-
     if (!response.ok) {
       return {
         user: null,
