@@ -17,26 +17,32 @@ export default function Auth() {
   async function authenticateUser(e: FormEvent) {
     e.preventDefault();
     setIsLoading(true);
-    const username: string = usernameState;
 
-    if (username.trim() === "") {
-      setErrorMessage("Please enter a valid username.");
-      setIsLoading(false);
-      return;
-    }
+    try {
+      const username: string = usernameState.trim();
+      if (username === "") {
+        setErrorMessage("Please enter a valid username.");
+        return;
+      }
 
-    const usernameAlreadyUsed: boolean = await isUsernameAlreadyUsed(username);
-    if (usernameAlreadyUsed) {
-      setErrorMessage(
-        "This username is already used, please choose another one."
+      const usernameAlreadyUsed: boolean = await isUsernameAlreadyUsed(
+        username
       );
-      setIsLoading(false);
-      return;
-    }
+      if (usernameAlreadyUsed) {
+        setErrorMessage(
+          "This username is already used, please choose another one."
+        );
+        return;
+      }
 
-    setUsername(username);
-    room.trim() === "" ? navigate("/") : navigate(`/${room}`);
-    setIsLoading(false);
+      setUsername(username);
+      room.trim() === "" ? navigate("/") : navigate(`/${room}`);
+    } catch (error) {
+      console.error("An error occurred during authentication:", error);
+      setErrorMessage("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
