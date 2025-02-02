@@ -35,6 +35,10 @@ export default class RoomService {
   }
 
   public deleteRoom(roomName: string): boolean {
+    if (roomName === "hello") {
+      return false;
+    }
+
     const roomIndex = this.getRooms().findIndex(
       (room) => room.name === roomName
     );

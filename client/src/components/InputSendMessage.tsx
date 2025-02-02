@@ -83,7 +83,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
         navigate(`/${argument}`);
         break;
       case "quit":
-        console.log("quit command");
+        navigate(`/`);
         break;
       case "users":
         console.log("users command");
