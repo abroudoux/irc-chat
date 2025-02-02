@@ -86,7 +86,9 @@ export default function InputSendMessage(props: InputSendMessageProps) {
         navigate(`/${argument}`);
         break;
       case "quit":
-        navigate(`/`);
+        CommandsService.instance.handleQuitRoom(username, props.roomName);
+        navigate("/");
+        navigate(0);
         break;
       case "users":
         CommandsService.instance.handleGetUsers(props.roomName);

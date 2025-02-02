@@ -104,4 +104,15 @@ export default class RoomService {
       room.users = room.users.filter((user) => user.id !== socketId);
     });
   }
+
+  public removeUserFromRoom(username: string, roomName: string): boolean {
+    const room = this.getRoom(roomName);
+    if (!room) {
+      console.error(`Room ${roomName} not found`);
+      return false;
+    }
+
+    room.users = room.users.filter((user) => user.username !== username);
+    return true;
+  }
 }

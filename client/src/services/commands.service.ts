@@ -67,4 +67,22 @@ export default class CommandsService {
       `Users in room: ${usersList.join(", ")}`
     );
   }
+
+  public async handleQuitRoom(username: string, roomName: string) {
+    const response: boolean = await HttpService.instance.quitRoom(
+      username,
+      roomName
+    );
+    response
+      ? SocketService.instance.sendMessage(
+          "System",
+          roomName,
+          `You have left the room.`
+        )
+      : SocketService.instance.sendMessage(
+          "System",
+          roomName,
+          `Can't leave the room.`
+        );
+  }
 }

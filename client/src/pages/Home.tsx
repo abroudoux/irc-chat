@@ -22,8 +22,6 @@ export default function Home() {
 
   async function getRooms() {
     const rooms = await HttpService.instance.getRoomsOfUser(username);
-    console.log("Rooms received:", rooms);
-
     setRooms((prevRooms) => {
       const newRooms = rooms
         .map((room) => room.name)
@@ -34,6 +32,7 @@ export default function Home() {
   }
 
   useEffect(() => {
+    setMessages([]);
     SocketService.instance.joinRoom(roomName);
 
     getRooms();
@@ -42,6 +41,7 @@ export default function Home() {
       setMessages((prevMessages) => [...prevMessages, message]);
     };
 
+    SocketService.instance.getSocket().off("receive_message");
     SocketService.instance.onReceiveMessage(handleMessage);
 
     return () => {

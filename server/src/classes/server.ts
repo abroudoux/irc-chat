@@ -56,6 +56,10 @@ export default class Server {
       this.httpService.createRoom(req, res);
     });
 
+    application.post(`/api/users/:username/rooms/:roomName`, (req, res) => {
+      this.httpService.quitRoom(req, res);
+    });
+
     application.delete("/api/rooms/delete/:roomName", (req, res) => {
       this.httpService.deleteRoom(req, res);
     });

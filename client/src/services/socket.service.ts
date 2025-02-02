@@ -59,9 +59,6 @@ export default class SocketService {
 
   public onReceiveMessage(callback: (message: Message) => void): void {
     this.socket.on("receive_message", (message) => {
-      console.log(
-        `Received message from ${message.author}: ${message.content}`
-      );
       callback(message);
     });
   }
@@ -71,14 +68,12 @@ export default class SocketService {
     roomName: string,
     message: string
   ): void {
-    console.log(`Sending message to room ${roomName}: ${message}`);
     this.socket.emit("send_message", username, roomName, message);
   }
 
   public onUserLeft(callback: (user: string) => void): void {
     this.socket.on("user_left_room", (user) => {
       callback(user);
-      console.log(`User ${user} left the room.`);
     });
   }
 
