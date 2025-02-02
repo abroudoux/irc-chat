@@ -20,10 +20,6 @@ pnpm install
 
 The server is up at adress `http://localhost:3000/api` and the client `http://localhost:5173`.
 
-### Docker
-
-... WIP
-
 ## Tests
 
 You can run the tests with the following command.
