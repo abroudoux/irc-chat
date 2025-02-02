@@ -9,6 +9,7 @@ import SectionLayout from "@/components/layouts/SectionLayout";
 import useStore from "@/lib/store";
 import type { InputSendMessageProps } from "@/utils/interfaces";
 import HttpService from "@/services/http.service";
+import SocketService from "@/services/socket.service";
 
 export default function InputSendMessage(props: InputSendMessageProps) {
   const [message, setMessage] = useState<string>("");
@@ -70,8 +71,12 @@ export default function InputSendMessage(props: InputSendMessageProps) {
     console.log(`Command: ${command}, Argument: ${argument}`);
     switch (command.toLowerCase()) {
       case "nick":
+        SocketService.instance.sendMessage(
+          username,
+          props.roomName,
+          `${username} changed their username to ${argument}`
+        );
         setUsername(argument);
-        navigate(0);
         break;
       case "list":
         handleGetRooms();
