@@ -40,6 +40,10 @@ export default class Server {
       this.httpService.getUsers(req, res);
     });
 
+    application.get("/api/users/:roomName", (req, res) => {
+      this.httpService.getUsersInRoom(req, res);
+    });
+
     application.get("/api/rooms", (req, res) => {
       this.httpService.getRooms(req, res);
     });

@@ -73,6 +73,9 @@ export default function InputSendMessage(props: InputSendMessageProps) {
       case "list":
         CommandsService.instance.handleGetRooms(props.roomName);
         break;
+      case "users":
+        CommandsService.instance.handleGetUsers(props.roomName);
+        break;
       case "create":
         CommandsService.instance.handleCreateRoom(props.roomName, argument);
         break;

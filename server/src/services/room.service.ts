@@ -16,6 +16,10 @@ export default class RoomService {
     return this.rooms;
   }
 
+  public getUsersInRoom(roomName: string): User[] {
+    return this.getRoom(roomName)?.users || [];
+  }
+
   public getRoom(roomName: string): Room | null {
     return this.getRooms().find((room) => room.name === roomName) || null;
   }

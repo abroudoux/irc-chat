@@ -1,3 +1,4 @@
+import type { User } from "@irc-chat/shared/types";
 import HttpService from "@/services/http.service";
 import SocketService from "@/services/socket.service";
 
@@ -55,5 +56,15 @@ export default class CommandsService {
           roomName,
           `Can't delete room ${argument}.`
         );
+  }
+
+  public async handleGetUsers(roomName: string) {
+    const users: User[] = await HttpService.instance.getUsersInRoom(roomName);
+    const usersList: string[] = users.map((user: User) => user.username);
+    SocketService.instance.sendMessage(
+      "System",
+      roomName,
+      `Users in room: ${usersList.join(", ")}`
+    );
   }
 }

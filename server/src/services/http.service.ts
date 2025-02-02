@@ -20,6 +20,12 @@ export default class HttpService {
     res.json({ users: users });
   };
 
+  public getUsersInRoom = (req: Request, res: Response): void => {
+    const { roomName } = req.params;
+    const users: User[] = this.roomService.getUsersInRoom(roomName);
+    res.json({ users: users });
+  };
+
   public getRooms = (_: Request, res: Response): void => {
     const rooms: Room[] = this.roomService.getRooms();
     res.json({ roooms: rooms });

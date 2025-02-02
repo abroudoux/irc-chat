@@ -7,12 +7,7 @@ export default class UserService {
   private users: User[];
 
   public constructor() {
-    this.users = [
-      {
-        id: "1",
-        username: "arthur",
-      },
-    ];
+    this.users = [];
   }
 
   public static getInstance(): UserService {
