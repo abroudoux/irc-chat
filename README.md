@@ -22,11 +22,7 @@ The server is up at adress `http://localhost:3000/api` and the client `http://lo
 
 ### Docker
 
-```bash
-docker compose up
-```
-
-The server is up at adress `http://localhost:3000/api` and the client `http://localhost:5173`.
+... WIP
 
 ## License
 
