@@ -32,7 +32,7 @@ export default class HttpService {
     }
   }
 
-  public async getRooms(): Promise<Room[]> {
+  public async getRooms(): Promise<string[]> {
     try {
       const response = await fetch(`${this.apiUrl}/rooms`);
       if (!response.ok) {
@@ -41,7 +41,14 @@ export default class HttpService {
       }
 
       const data = await response.json();
-      return data.rooms as Room[];
+
+      if (data.roooms && Array.isArray(data.roooms)) {
+        const roomsNames: string[] = data.roooms.map((room: Room) => room.name);
+        return roomsNames;
+      } else {
+        console.error("Unexpected data structure");
+        return [];
+      }
     } catch (error: unknown) {
       console.error(error);
       return [];

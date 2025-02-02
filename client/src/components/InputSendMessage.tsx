@@ -62,21 +62,29 @@ export default function InputSendMessage(props: InputSendMessageProps) {
     setTooltip(null);
   }
 
+  function handleChangeUsername(username: string, newUsername: string) {
+    SocketService.instance.sendMessage(
+      username,
+      props.roomName,
+      `${username} changed their username to ${newUsername}`
+    );
+    setUsername(newUsername);
+  }
+
   async function handleGetRooms() {
-    const rooms: Room[] = await HttpService.instance.getRooms();
-    console.log(rooms);
+    const roomsNames: string[] = await HttpService.instance.getRooms();
+    SocketService.instance.sendMessage(
+      "System",
+      props.roomName,
+      `Available rooms: ${roomsNames.join(", ")}`
+    );
   }
 
   function handleCommand(command: string, argument: string, username: string) {
     console.log(`Command: ${command}, Argument: ${argument}`);
     switch (command.toLowerCase()) {
       case "nick":
-        SocketService.instance.sendMessage(
-          username,
-          props.roomName,
-          `${username} changed their username to ${argument}`
-        );
-        setUsername(argument);
+        handleChangeUsername(username, argument);
         break;
       case "list":
         handleGetRooms();

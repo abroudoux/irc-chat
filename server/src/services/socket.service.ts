@@ -80,6 +80,7 @@ export default class SocketService {
 
   private disctonnectUSer(username: string, userId: string) {
     this.userService.removeUser(username, userId);
+    this.roomService.removeUserFromRooms(username);
     console.log(`User ${username} - ${userId} disconnected.`);
   }
 }
