@@ -1,15 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import type { Room } from "@irc-chat/shared/types";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SectionLayout from "@/components/layouts/SectionLayout";
 import useStore from "@/lib/store";
 import type { InputSendMessageProps } from "@/utils/interfaces";
-import HttpService from "@/services/http.service";
-import SocketService from "@/services/socket.service";
+import CommandsService from "@/services/commands.service";
 
 export default function InputSendMessage(props: InputSendMessageProps) {
   const [message, setMessage] = useState<string>("");
@@ -62,32 +59,19 @@ export default function InputSendMessage(props: InputSendMessageProps) {
     setTooltip(null);
   }
 
-  function handleChangeUsername(username: string, newUsername: string) {
-    SocketService.instance.sendMessage(
-      username,
-      props.roomName,
-      `${username} changed their username to ${newUsername}`
-    );
-    setUsername(newUsername);
-  }
-
-  async function handleGetRooms() {
-    const roomsNames: string[] = await HttpService.instance.getRooms();
-    SocketService.instance.sendMessage(
-      "System",
-      props.roomName,
-      `Available rooms: ${roomsNames.join(", ")}`
-    );
-  }
-
   function handleCommand(command: string, argument: string, username: string) {
     console.log(`Command: ${command}, Argument: ${argument}`);
     switch (command.toLowerCase()) {
       case "nick":
-        handleChangeUsername(username, argument);
+        CommandsService.instance.handleChangeUsername(
+          username,
+          argument,
+          props.roomName
+        );
+        setUsername(argument);
         break;
       case "list":
-        handleGetRooms();
+        CommandsService.instance.handleGetRooms(props.roomName);
         break;
       case "create":
         console.log("create command");
