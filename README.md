@@ -24,6 +24,14 @@ The server is up at adress `http://localhost:3000/api` and the client `http://lo
 
 ... WIP
 
+## Tests
+
+You can run the tests with the following command.
+
+```bash
+pnpm test
+```
+
 ## License
 
 This project is under the [MIT License](License).
