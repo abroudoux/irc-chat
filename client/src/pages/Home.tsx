@@ -9,16 +9,29 @@ import useAuth from "@/hooks/useAuth";
 import useStore from "@/lib/store";
 import type { Message } from "@/utils/interfaces";
 import SocketService from "@/services/socket.service";
+import HttpService from "@/services/http.service";
+import ListRooms from "@/components/ListRooms";
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [rooms, setRooms] = useState<string[]>([]);
   const { username } = useStore();
   const roomName: string = useParams().roomName || "hello";
 
   useAuth();
 
+  async function getRooms() {
+    const rooms = await HttpService.instance.getRooms();
+    setRooms((prevRooms) => {
+      const newRooms = rooms.filter((room) => !prevRooms.includes(room));
+      return [...prevRooms, ...newRooms];
+    });
+  }
+
   useEffect(() => {
     SocketService.instance.joinRoom(roomName);
+
+    getRooms();
 
     const handleMessage = (message: Message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
@@ -34,7 +47,8 @@ export default function Home() {
 
   return (
     <SectionLayout className="w-screen h-screen flex flex-row justify-start items-start">
-      <div className="h-full flex flex-col items-center justify-end pb-8">
+      <div className="h-full flex flex-col items-start justify-between pb-8 p-4 border rounded">
+        <ListRooms rooms={rooms} />
         <BtnLogoutUser />
       </div>
       <div>
