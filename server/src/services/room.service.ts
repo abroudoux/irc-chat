@@ -20,9 +20,9 @@ export default class RoomService {
     return this.getRooms().find((room) => room.name === roomName) || null;
   }
 
-  public createRoom(roomName: string): void {
+  public createRoom(roomName: string): boolean {
     if (this.isRoomAlreadyCreated(roomName)) {
-      return;
+      return false;
     }
 
     const roomCreated: Room = {
@@ -31,6 +31,7 @@ export default class RoomService {
     };
 
     this.rooms.push(roomCreated);
+    return true;
   }
 
   private isRoomAlreadyCreated(roomName: string) {

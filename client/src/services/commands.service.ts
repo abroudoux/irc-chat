@@ -26,4 +26,19 @@ export default class CommandsService {
       `${username} changed their username to ${newUsername}.`
     );
   }
+
+  public async handleCreateRoom(roomName: string, argument: string) {
+    const response: boolean = await HttpService.instance.createRoom(argument);
+    response
+      ? SocketService.instance.sendMessage(
+          "System",
+          roomName,
+          `Room ${argument} created.`
+        )
+      : SocketService.instance.sendMessage(
+          "System",
+          roomName,
+          `Can't create room ${argument}.`
+        );
+  }
 }

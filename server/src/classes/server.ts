@@ -44,6 +44,10 @@ export default class Server {
       this.httpService.getRooms(req, res);
     });
 
+    application.post("/api/rooms/create/:roomName", (req, res) => {
+      this.httpService.createRoom(req, res);
+    });
+
     application.get("/api/users/:username", (req, res) => {
       this.httpService.isUsernameAlreadyUsed(req, res);
     });

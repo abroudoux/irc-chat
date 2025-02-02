@@ -54,4 +54,21 @@ export default class HttpService {
       return [];
     }
   }
+
+  public async createRoom(roomName: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.apiUrl}/rooms/create/${roomName}`, {
+        method: "POST",
+      });
+      if (!response.ok) {
+        console.error("Failed to create room");
+        return false;
+      }
+
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
+      return false;
+    }
+  }
 }

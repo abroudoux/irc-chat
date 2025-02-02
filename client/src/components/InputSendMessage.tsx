@@ -74,7 +74,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
         CommandsService.instance.handleGetRooms(props.roomName);
         break;
       case "create":
-        console.log("create command");
+        CommandsService.instance.handleCreateRoom(props.roomName, argument);
         break;
       case "delete":
         console.log("delete command");
