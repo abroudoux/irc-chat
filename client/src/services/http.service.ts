@@ -71,4 +71,21 @@ export default class HttpService {
       return false;
     }
   }
+
+  public async deleteRoom(roomName: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.apiUrl}/rooms/delete/${roomName}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        console.error("Failed to delete room");
+        return false;
+      }
+
+      return true;
+    } catch (error: unknown) {
+      console.error(error);
+      return false;
+    }
+  }
 }

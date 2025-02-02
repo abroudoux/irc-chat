@@ -48,6 +48,10 @@ export default class Server {
       this.httpService.createRoom(req, res);
     });
 
+    application.delete("/api/rooms/delete/:roomName", (req, res) => {
+      this.httpService.deleteRoom(req, res);
+    });
+
     application.get("/api/users/:username", (req, res) => {
       this.httpService.isUsernameAlreadyUsed(req, res);
     });

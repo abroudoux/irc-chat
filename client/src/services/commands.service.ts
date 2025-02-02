@@ -41,4 +41,19 @@ export default class CommandsService {
           `Can't create room ${argument}.`
         );
   }
+
+  public async handleDeleteRoom(roomName: string, argument: string) {
+    const response: boolean = await HttpService.instance.deleteRoom(argument);
+    response
+      ? SocketService.instance.sendMessage(
+          "System",
+          roomName,
+          `Room ${argument} deleted.`
+        )
+      : SocketService.instance.sendMessage(
+          "System",
+          roomName,
+          `Can't delete room ${argument}.`
+        );
+  }
 }

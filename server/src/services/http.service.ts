@@ -33,6 +33,16 @@ export default class HttpService {
     res.json({ roomCreated: roomCreated });
   };
 
+  public deleteRoom = (req: Request, res: Response): void => {
+    const { roomName } = req.params;
+    const roomDeleted: boolean = this.roomService.deleteRoom(roomName);
+
+    console.log(`Room ${roomName} deleted: ${roomDeleted}`);
+
+    res.status(roomDeleted ? 200 : 404);
+    res.json({ roomDeleted: roomDeleted });
+  };
+
   public getUserConnected(): User | null {
     return this.userConnected;
   }

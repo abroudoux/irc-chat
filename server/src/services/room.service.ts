@@ -34,6 +34,18 @@ export default class RoomService {
     return true;
   }
 
+  public deleteRoom(roomName: string): boolean {
+    const roomIndex = this.getRooms().findIndex(
+      (room) => room.name === roomName
+    );
+    if (roomIndex === -1) {
+      return false;
+    }
+
+    this.rooms.splice(roomIndex, 1);
+    return true;
+  }
+
   private isRoomAlreadyCreated(roomName: string) {
     return this.getRooms().some((room) => room.name === roomName);
   }
