@@ -31,6 +31,12 @@ export default class HttpService {
     res.json({ roooms: rooms });
   };
 
+  public getRoomsOfUser = (req: Request, res: Response): void => {
+    const { username } = req.params;
+    const rooms: Room[] = this.roomService.getRoomsOfUser(username);
+    res.json({ rooms: rooms });
+  };
+
   public createRoom = (req: Request, res: Response): void => {
     const { roomName } = req.params;
     const roomCreated: boolean = this.roomService.createRoom(roomName);

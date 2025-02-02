@@ -71,6 +71,22 @@ export default class HttpService {
     }
   }
 
+  public async getRoomsOfUser(username: string): Promise<Room[]> {
+    try {
+      const response = await fetch(`${this.apiUrl}/users/${username}/rooms`);
+      if (!response.ok) {
+        console.error("Failed to fetch rooms of user");
+        return [];
+      }
+
+      const data = await response.json();
+      return data.rooms;
+    } catch (error: unknown) {
+      console.error(error);
+      return [];
+    }
+  }
+
   public async createRoom(roomName: string): Promise<boolean> {
     try {
       const response = await fetch(`${this.apiUrl}/rooms/create/${roomName}`, {

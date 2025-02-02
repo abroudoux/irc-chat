@@ -24,6 +24,12 @@ export default class RoomService {
     return this.getRooms().find((room) => room.name === roomName) || null;
   }
 
+  public getRoomsOfUser(username: string): Room[] {
+    return this.getRooms().filter((room) =>
+      room.users.some((user) => user.username === username)
+    );
+  }
+
   public createRoom(roomName: string): boolean {
     if (this.isRoomAlreadyCreated(roomName)) {
       return false;

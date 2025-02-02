@@ -21,9 +21,14 @@ export default function Home() {
   useAuth();
 
   async function getRooms() {
-    const rooms = await HttpService.instance.getRooms();
+    const rooms = await HttpService.instance.getRoomsOfUser(username);
+    console.log("Rooms received:", rooms);
+
     setRooms((prevRooms) => {
-      const newRooms = rooms.filter((room) => !prevRooms.includes(room));
+      const newRooms = rooms
+        .map((room) => room.name)
+        .filter((roomName) => !prevRooms.includes(roomName));
+
       return [...prevRooms, ...newRooms];
     });
   }

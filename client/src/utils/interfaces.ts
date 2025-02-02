@@ -1,5 +1,3 @@
-import { Room } from "@irc-chat/shared/types";
-
 export interface Store {
   userId: string;
   username: string;
