@@ -15,7 +15,7 @@ export default function BtnLogoutUser() {
   }
 
   return (
-    <div className="h-full flex flex-col items-center justify-end">
+    <div className="h-auto flex flex-col items-center justify-end">
       <Button onClick={logoutUser}>Logout</Button>
     </div>
   );
