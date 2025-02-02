@@ -32,21 +32,6 @@ export default function Home() {
     };
   }, [roomName]);
 
-  //   SocketService.instance.setUser(user);
-  //   SocketService.instance.connect();
-  //   SocketService.instance.joinRoom(roomName);
-  // });
-
-  // useEffect(() => {
-  //   SocketService.instance.onReceiveMessage((message) => {
-  //     setMessages((prevMessages) => [...prevMessages, message]);
-  //   });
-
-  //   return () => {
-  //     SocketService.instance.disconnect();
-  //   };
-  // });
-
   return (
     <SectionLayout className="w-screen h-screen flex flex-row justify-start items-start">
       <div className="h-full flex flex-col items-center justify-end pb-8">

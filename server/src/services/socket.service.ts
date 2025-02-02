@@ -1,8 +1,6 @@
 import { Server, Socket, DefaultEventsMap } from "socket.io";
 import http from "http";
 
-import type { User } from "@irc-chat/shared/types";
-
 import RoomService from "./room.service";
 import UserService from "./user.service";
 
@@ -40,7 +38,6 @@ export default class SocketService {
 
       socket.on("leave_room", (username: string, roomName: string) => {
         socket.leave(roomName);
-        // this.roomService.removeUserFromRoom(roomName, username);
         this.emitMessage("System", roomName, `${username} left the room.`);
       });
 
@@ -54,10 +51,8 @@ export default class SocketService {
         }
       );
 
-      socket.on("disconnect", () => {
-        console.log(`User ${socket.id} disconnected.`);
-        // this.userService.removeUser(socket.id);
-        // this.roomService.removeUserFromAllRooms(socket.id);
+      socket.on("disconnect_user", (username: string) => {
+        this.disctonnectUSer(username, socket.id);
       });
     });
   }
@@ -81,5 +76,10 @@ export default class SocketService {
     console.log(
       `Message emited from ${username} in room ${roomName}: ${content}`
     );
+  }
+
+  private disctonnectUSer(username: string, userId: string) {
+    this.userService.removeUser(username, userId);
+    console.log(`User ${username} - ${userId} disconnected.`);
   }
 }

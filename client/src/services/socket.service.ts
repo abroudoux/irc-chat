@@ -83,6 +83,7 @@ export default class SocketService {
   }
 
   public disconnect(): void {
+    this.socket.emit("disconnect_user", this.getUsername());
     this.socket.disconnect();
   }
 

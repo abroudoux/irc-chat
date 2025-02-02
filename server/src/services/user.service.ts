@@ -38,8 +38,12 @@ export default class UserService {
     return userCreated;
   }
 
-  public removeUser(userId: string): void {
+  public removeUser(username: string, userId: string): void {
+    this.users = this.users.filter((user) => user.username !== username);
     this.users = this.users.filter((user) => user.id !== userId);
+    console.log(`User ${username} - ${userId} removed.`);
+    console.log("ALL USERS:");
+    console.log(this.getUsers());
   }
 
   public isUsernameAlreadyUsed(username: string): boolean {
