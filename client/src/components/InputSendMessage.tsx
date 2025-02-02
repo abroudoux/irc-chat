@@ -89,7 +89,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
         navigate(`/`);
         break;
       case "users":
-        console.log("users command");
+        CommandsService.instance.handleGetUsers(props.roomName);
         break;
       case "msg":
         console.log("msg command");
