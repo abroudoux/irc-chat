@@ -37,14 +37,23 @@ export default class RoomService {
     return this.getRooms().some((room) => room.name === roomName);
   }
 
-  public addUserToRoom(roomName: string, user: User): void {
+  public addUserToRoom(
+    roomName: string,
+    username: string,
+    userId: string
+  ): void {
     const room = this.getRoom(roomName);
     if (!room) {
       console.error(`Room ${roomName} not found`);
       return;
     }
 
-    room?.users.push(user);
+    const newUser: User = {
+      id: userId,
+      username,
+    };
+
+    room?.users.push(newUser);
   }
 
   public logAllRooms(): void {

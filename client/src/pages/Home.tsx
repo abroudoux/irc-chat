@@ -17,12 +17,20 @@ export default function Home() {
 
   useAuth();
 
-  // const { createAndLogUser } = useAuth();
-  // createAndLogUser().then((user) => {
-  //   if (!user) {
-  //     console.error("Error while creating user");
-  //     return;
-  //   }
+  useEffect(() => {
+    SocketService.instance.joinRoom(roomName);
+
+    const handleMessage = (message: Message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    };
+
+    SocketService.instance.onReceiveMessage(handleMessage);
+
+    return () => {
+      SocketService.instance.offFromRoom(roomName);
+      SocketService.instance.getSocket().off("receive_message", handleMessage);
+    };
+  }, [roomName]);
 
   //   SocketService.instance.setUser(user);
   //   SocketService.instance.connect();

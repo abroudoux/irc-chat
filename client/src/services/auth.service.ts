@@ -1,11 +1,5 @@
 import type { User } from "@irc-chat/shared/types";
 
-interface AuthServiceResponse {
-  userCreated: User | null;
-  error: boolean;
-  errorMessage: string | null;
-}
-
 export default class AuthService {
   public static instance: AuthService = new AuthService();
   private API_URL: string;
@@ -44,41 +38,12 @@ export default class AuthService {
       }
 
       const data = await response.json();
-      const userCreated: User = data.userCreated;
+      const userConnected: User = data.userConnected;
 
-      return userCreated;
+      return userConnected;
     } catch (error: unknown) {
       console.error(error);
       throw new Error("Error while connecting user");
-    }
-  }
-
-  public async createUser(username: string): Promise<AuthServiceResponse> {
-    try {
-      const response = await fetch(`${this.getApiUrl()}/auth/${username}`);
-      if (response.status === 409) {
-        return {
-          userCreated: null,
-          error: true,
-          errorMessage: "Username already used",
-        };
-      }
-
-      if (!response.ok) {
-        throw new Error("Error while creating user");
-      }
-
-      const data = await response.json();
-      const userCreated: User = data.userCreated;
-
-      return {
-        userCreated: userCreated,
-        error: false,
-        errorMessage: null,
-      };
-    } catch (error: unknown) {
-      console.error(error);
-      throw new Error("Error while creating user");
     }
   }
 }

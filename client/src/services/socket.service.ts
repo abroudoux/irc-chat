@@ -6,12 +6,13 @@ export default class SocketService {
   public static instance: SocketService = new SocketService();
   private socketUrl: string;
   private socket: Socket;
-  private userName: string;
+  private username: string;
+  private currentRoom: string | null = null;
 
   private constructor() {
     this.socketUrl = "http://localhost:3000";
     this.socket = io(this.socketUrl);
-    this.userName = "";
+    this.username = "";
   }
 
   public static getInstance(): SocketService {
@@ -26,41 +27,52 @@ export default class SocketService {
     return this.socket;
   }
 
-  public getUserName(): string {
-    return this.userName;
+  public getUsername(): string {
+    return this.username;
   }
 
-  public setUserName(userName: string): void {
-    this.userName = userName;
+  public setUserName(username: string): void {
+    this.username = username;
+  }
+
+  public getCurrentRoom(): string | null {
+    return this.currentRoom;
+  }
+
+  public setCurrentRoom(roomName: string): void {
+    this.currentRoom = roomName;
   }
 
   public connect(): void {
     this.socket.connect();
-    this.socket.emit("user_connected", this.getUserName());
   }
 
   public joinRoom(roomName: string): void {
-    this.socket.emit("join_room", roomName);
-    console.log(`User ${this.getUserName} joined room ${roomName}.`);
+    if (this.currentRoom !== roomName) {
+      if (this.currentRoom) {
+        this.offFromRoom(this.currentRoom);
+      }
+      this.currentRoom = roomName;
+      this.socket.emit("join_room", this.getUsername(), roomName);
+    }
   }
 
   public onReceiveMessage(callback: (message: Message) => void): void {
     this.socket.on("receive_message", (message) => {
+      console.log(
+        `Received message from ${message.author}: ${message.content}`
+      );
       callback(message);
-      console.log(`User ${message.author} sent a message: ${message.content}`);
     });
   }
 
-  public sendMessage(roomName: string, message: string): void {
-    this.socket.emit("send_message", roomName, message);
-    console.log(`User sent a message to room ${roomName}: ${message}`);
-  }
-
-  public onUserJoined(callback: (user: string) => void): void {
-    this.socket.on("user_joined_room", (user) => {
-      callback(user);
-      console.log(`User ${user} joined the room.`);
-    });
+  public sendMessage(
+    username: string,
+    roomName: string,
+    message: string
+  ): void {
+    console.log(`Sending message to room ${roomName}: ${message}`);
+    this.socket.emit("send_message", username, roomName, message);
   }
 
   public onUserLeft(callback: (user: string) => void): void {
@@ -75,6 +87,9 @@ export default class SocketService {
   }
 
   public offFromRoom(roomName: string): void {
-    this.socket.off(roomName);
+    if (this.currentRoom === roomName) {
+      this.socket.emit("leave_room", this.getUsername(), roomName);
+      this.currentRoom = null;
+    }
   }
 }

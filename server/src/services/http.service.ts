@@ -8,6 +8,7 @@ import RoomService from "./room.service";
 export default class HttpService {
   private userService: UserService;
   private roomService: RoomService;
+  private userConnected: User | null = null;
 
   public constructor(userService: UserService, roomService: RoomService) {
     this.userService = userService;
@@ -24,6 +25,14 @@ export default class HttpService {
     res.json({ roooms: rooms });
   };
 
+  public getUserConnected(): User | null {
+    return this.userConnected;
+  }
+
+  public setUserConnected(user: User): void {
+    this.userConnected = user;
+  }
+
   public isUsernameAlreadyUsed = (req: Request, res: Response): void => {
     const { username } = req.params;
     const usernameAlreadyUsed: boolean =
@@ -33,17 +42,13 @@ export default class HttpService {
     res.json({ usernameAlreadyUsed: usernameAlreadyUsed });
   };
 
-  public connectUser = (req: Request, res: Response): User | null => {
+  public connectUser = (req: Request, res: Response): void => {
     const { username } = req.params;
-    const usernameAlreadyUsed: boolean =
-      this.userService.isUsernameAlreadyUsed(username);
-    const userCreated: User | null = usernameAlreadyUsed
-      ? null
-      : this.userService.createUser(username);
+    const userConnected: User = this.userService.createUser(username);
 
-    res.status(usernameAlreadyUsed ? 409 : 201);
-    res.json({ userCreated: userCreated });
+    this.setUserConnected(userConnected);
 
-    return userCreated ? userCreated : null;
+    res.status(201);
+    res.json({ userConnected: userConnected });
   };
 }

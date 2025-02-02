@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import type { Room, User } from "@irc-chat/shared/types";
+import type { Room } from "@irc-chat/shared/types";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,7 +54,7 @@ export default function InputSendMessage(props: InputSendMessageProps) {
       const argument: string = message.split(" ")[1];
       handleCommand(command, argument, username);
     } else {
-      props.socket.sendMessage(roomName, message);
+      props.socket.sendMessage(username, roomName, message);
     }
 
     setMessage("");

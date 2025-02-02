@@ -8,7 +8,6 @@ import UserService from "./user.service";
 
 export default class SocketService {
   private io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
-  private user: User | null;
   private userService: UserService;
   private roomService: RoomService;
 
@@ -31,80 +30,56 @@ export default class SocketService {
 
     this.userService = userService;
     this.roomService = roomService;
-    this.user = null;
   }
 
-  public getUserConnected(): User {
-    if (!this.user) {
-      throw new Error("No user connected.");
-    }
-
-    return this.user;
-  }
-
-  private setUser(user: User): void {
-    this.user = user;
-    console.log(`User ${user.username} connected to the server.`);
-  }
-
-  public init(user: User): void {
-    this.setUser(user);
-
+  public init(): void {
     this.io.on("connection", (socket: Socket) => {
-      socket.on("user_connected", (username: string) => {
-        console.log(`User ${username} connected to the server.`);
+      socket.on("join_room", (username: string, roomName: string) => {
+        this.joinRoom(username, socket, roomName);
       });
 
-      socket.on("join_room", (roomName: string) => {
-        this.joinRoom(socket, roomName);
-        console.log(
-          `User ${this.getUserConnected().username} joined room ${roomName}.`
-        );
+      socket.on("leave_room", (username: string, roomName: string) => {
+        socket.leave(roomName);
+        // this.roomService.removeUserFromRoom(roomName, username);
+        this.emitMessage("System", roomName, `${username} left the room.`);
       });
 
-      socket.on("send_message", (roomName: string, message: string) => {
-        this.emitMessage(roomName, message);
-        console.log(
-          `User ${
-            this.getUserConnected().username
-          } sent a message to room ${roomName}: ${message}`
-        );
-      });
+      socket.on(
+        "send_message",
+        (username: string, roomName: string, message: string) => {
+          console.log(
+            `Received message from ${username} in room ${roomName}: ${message}`
+          );
+          this.emitMessage(username, roomName, message);
+        }
+      );
 
       socket.on("disconnect", () => {
-        this.roomService.removeUserFromRooms(this.getUserConnected().id);
-        this.userService.removeUser(this.getUserConnected().id);
-
-        this.emitUserLeftRoom(this.getUserConnected().username);
-        this.user = null;
-        console.log("User disconnected.");
+        console.log(`User ${socket.id} disconnected.`);
+        // this.userService.removeUser(socket.id);
+        // this.roomService.removeUserFromAllRooms(socket.id);
       });
     });
   }
 
-  private joinRoom(socket: Socket, roomName: string) {
-    socket.join(roomName);
-    this.emitUserJoinedRoom(roomName);
-    this.roomService.createRoom(roomName);
-    this.roomService.addUserToRoom(roomName, this.getUserConnected());
+  private joinRoom(username: string, socket: Socket, roomName: string) {
+    const rooms = Array.from(socket.rooms);
+    if (!rooms.includes(roomName)) {
+      socket.join(roomName);
+      const newMessage: string = `${username} joined the room.`;
+      this.emitMessage("System", roomName, newMessage);
+      this.roomService.createRoom(roomName);
+      this.roomService.addUserToRoom(roomName, username, socket.id);
+    }
   }
 
-  private emitMessage(roomName: string, content: string) {
+  private emitMessage(username: string, roomName: string, content: string) {
     this.io.to(roomName).emit("receive_message", {
-      author: this.getUserConnected().username,
+      author: username,
       content: content,
     });
-  }
-
-  private emitUserJoinedRoom(roomName: string) {
-    this.io
-      .to(roomName)
-      .emit("user_joined_room", this.getUserConnected().username);
-  }
-
-  private emitUserLeftRoom(roomName: string) {
-    this.io
-      .to(roomName)
-      .emit("user_left_room", this.getUserConnected().username);
+    console.log(
+      `Message emited from ${username} in room ${roomName}: ${content}`
+    );
   }
 }

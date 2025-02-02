@@ -28,12 +28,14 @@ export default class Server {
       this.userService,
       this.roomService
     );
+    this.socketService.init();
     this.httpService = new HttpService(this.userService, this.roomService);
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
     const application: Express = this.application.getApp();
+
     application.get("/api/users", (req, res) => {
       this.httpService.getUsers(req, res);
     });
@@ -47,8 +49,8 @@ export default class Server {
     });
 
     application.get("/api/auth/:username", (req, res) => {
-      const user = this.httpService.connectUser(req, res);
-      user && this.socketService.init(user);
+      this.httpService.connectUser(req, res);
+      const user = this.httpService.getUserConnected();
     });
   }
 
